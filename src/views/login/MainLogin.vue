@@ -20,7 +20,7 @@ import LoadingFull from '@/components/LoadingFull.vue';
 import OptionsUser from './Token/OptionsUser.vue';
 
 export default defineComponent({
-    components:{LoadingFull, OptionsUser},
+    components:{ LoadingFull, OptionsUser },
     created() {
         
     },

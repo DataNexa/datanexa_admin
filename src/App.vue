@@ -7,6 +7,9 @@ import MainLogin from "./views/login/MainLogin.vue"
 
 export default defineComponent({
 	created() {
+
+		console.log(import.meta.env.VITE_API_URL);
+		
 		// verificar se existe uma session 
 		// se nao existir exibir a tela de login
 		this.loadingData()
@@ -15,7 +18,7 @@ export default defineComponent({
     data(){
         return {
 			loading:false,
-			component:"Main",
+			component:"MainLogin",
 			keyLoading:1,
 			percentLoading:1
         }

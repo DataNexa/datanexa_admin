@@ -10,8 +10,8 @@
 <script lang="ts">
 import {defineComponent} from "vue"
 import ModalVue from "@/components/ModalVue.vue"
-import type { formdata_i } from "@/interfaces/FormDataI"
-import type { button_i } from "@/interfaces/ButtonI"
+import type { formdata_i } from "@/components/interfaces/FormDataI"
+import type { button_i } from "@/components/interfaces/ButtonI"
 
 interface data {
     formdata:formdata_i,

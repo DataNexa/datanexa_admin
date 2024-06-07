@@ -12,7 +12,7 @@
 <script lang="ts">
 
 import { defineComponent } from 'vue';
-import type { input_i } from '@/interfaces/InputI';
+import type { input_i } from '@/components/interfaces/InputI';
 
 const regs:{[key:string]:string} = {
     cpf:"([0-9]{2}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[\\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[-]?[0-9]{2})",

@@ -11,9 +11,9 @@
 <script lang="ts">
 import {defineComponent} from "vue"
 import ModalVue from "@/components/ModalForm.vue"
-import type { formdata_i } from "@/interfaces/FormDataI"
-import type { button_i } from "@/interfaces/ButtonI"
-import { alert_type, type alert_i } from "@/interfaces/AlertI"
+import type { formdata_i } from "@/components/interfaces/FormDataI"
+import type { button_i } from "@/components/interfaces/ButtonI"
+import { alert_type, type alert_i } from "@/components/interfaces/AlertI"
 import AlertVue from "@/components/AlertVue.vue"
 interface data {
     formdata:formdata_i,

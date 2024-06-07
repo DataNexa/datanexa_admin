@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import type { input_i } from '@/interfaces/InputI'
+import type { input_i } from '@/components/interfaces/InputI'
 import Icon from '../Icon.vue'
 
 export default defineComponent({

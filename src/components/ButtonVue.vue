@@ -5,7 +5,7 @@
 
 <script lang="ts">
 
-import type { button_i } from '@/interfaces/ButtonI';
+import type { button_i } from '@/components/interfaces/ButtonI';
 import { defineComponent } from 'vue';
 
 export default defineComponent({

@@ -130,7 +130,7 @@ import Page from '@/components/Page.vue';
 import Icon from '@/components/Icon.vue';
 import InputVue from '@/components/InputVue.vue';
 import LoadingSimple from '@/components/LoadingSimple.vue';
-import type { input_i } from '@/interfaces/InputI';
+import type { input_i } from '@/components/interfaces/InputI';
 import ListCampanhaWidget from '../widgets/campanha/ListCampanhaWidget.vue';
 
 interface data {

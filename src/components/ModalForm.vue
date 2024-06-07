@@ -7,8 +7,8 @@
 <script lang="ts">
 
 import { defineComponent } from "vue"
-import type { formdata_i } from '@/interfaces/FormDataI'
-import type { button_i } from "@/interfaces/ButtonI"
+import type { formdata_i } from '@/components/interfaces/FormDataI'
+import type { button_i } from "@/components/interfaces/ButtonI"
 import FormVue from "./FormVue.vue"
 import ModalDynamic from "./ModalDynamic.vue"
 

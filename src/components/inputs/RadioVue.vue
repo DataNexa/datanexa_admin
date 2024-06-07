@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import type { input_i } from '@/interfaces/InputI';
+import type { input_i } from '@/components/interfaces/InputI';
 import {defineComponent} from 'vue'
 
 export default defineComponent({

@@ -11,7 +11,7 @@
 <script lang="ts">
 
 import {defineComponent} from 'vue'
-import { alert_type, type alert_i } from '@/interfaces/AlertI'
+import { alert_type, type alert_i } from '@/components/interfaces/AlertI'
 
 export default defineComponent({
 

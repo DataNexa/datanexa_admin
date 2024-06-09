@@ -4,12 +4,10 @@ import {defineComponent} from "vue"
 import LoadingFull from "./components/LoadingFull.vue"
 import Main from "./views/app/Main.vue"
 import MainLogin from "./views/login/MainLogin.vue"
+import authService from "./model/services/auth.service"
 
 export default defineComponent({
 	created() {
-
-		console.log(import.meta.env.VITE_API_URL);
-		
 		// verificar se existe uma session 
 		// se nao existir exibir a tela de login
 		this.loadingData()
@@ -25,6 +23,8 @@ export default defineComponent({
     },
 	methods:{
 		loadingData(){
+
+			// authService.login('andreifcoelho@gmail.com', 'mushmush123')
 
 			// verificar se existe o token_account
 			// se nao existir exibir a tela de login

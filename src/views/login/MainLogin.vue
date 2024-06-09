@@ -18,17 +18,20 @@ import { defineComponent } from 'vue';
 
 import LoadingFull from '@/components/LoadingFull.vue';
 import OptionsUser from './Token/OptionsUser.vue';
+import AuthLogin from './Auth/AuthLogin.vue';
+import AuthMain from "./Auth/AuthMain.vue"
 
 export default defineComponent({
-    components:{ LoadingFull, OptionsUser },
+    components:{ LoadingFull, OptionsUser, AuthMain },
     created() {
+        console.log(this.component);
         
     },
     data() {
         return {
             percent:1,
             loading:false,
-            component:"OptionsUser"
+            component:"AuthMain"
         }
     },
     methods:{

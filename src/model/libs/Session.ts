@@ -41,8 +41,14 @@ class Session {
         return Session.session?.value
     }
 
-    static expireSession(){
+    static expireSessions(){
         this.session = undefined
+        this.session_temp = undefined
+    }
+
+    static deleteToken(){
+        // deletar cookie
+        this.token = undefined
     }
 
     static getAnSession(){
@@ -73,6 +79,7 @@ class Session {
                 return Session.getTempSessionValue()
             }
         }
+        return undefined
     }
 
 

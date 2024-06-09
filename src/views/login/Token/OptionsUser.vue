@@ -53,7 +53,7 @@ export default defineComponent({
     data():{listUser:User[], showPassInput:Boolean}{
         return {
             listUser:[],
-            showPassInput:true
+            showPassInput:false
         }
     },
     methods:{

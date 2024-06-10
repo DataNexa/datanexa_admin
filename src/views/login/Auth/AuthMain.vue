@@ -8,7 +8,7 @@
                     </div>
                 </div>
                 <div style="height: 170px;" class="row justify-content-center py-2" v-for="btn,k in buttons" :key="k">
-                    <div @click="onClick(btn.type)" style="height: 150px;" class="col-11 col-md-10 col-lg-6 bg-white rounded btn-card">
+                    <div @click="onClick(btn.redirect)" style="height: 150px;" class="col-11 col-md-10 col-lg-6 bg-white rounded btn-card">
                         <div class="row p-0 px-3">
                             <div class="col-7 col-md-8 col-lg-10">
                                 <h2 class="text-blue mt-4">{{ btn.title }}</h2>
@@ -35,29 +35,32 @@ export default defineComponent({
     components: { IconUserAuth, IconLogoQuadrado },
     data(){
         return {
+            component:'',
             buttons:[
                 {
                     title:"ENTRAR",
                     description:"Faça o login com e-mail e senha",
-                    type:'entrar'
+                    type:'entrar',
+                    redirect:'AuthLogin'
                 },
                 {
                     title:"CRIAR CONTA",
                     description:"Crie uma conta com seu e-mail",
-                    type:'add'
+                    type:'add',
+                    redirect:'AuthCreateAccount'
                 },
                 {
                     title:"RECUPERAÇÃO",
                     description:"Recupere sua conta aqui",
-                    type:'confirm'
+                    type:'confirm',
+                    redirect:'AuthRecover'
                 }
             ]
         }
     },
     methods: {
         onClick(slug:string){
-            console.log(slug);
-            
+            this.$emit('redirectTo', slug)
         }
     },
 })

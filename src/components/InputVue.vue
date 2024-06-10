@@ -17,8 +17,8 @@ import SearchVue from "./inputs/SearchVue.vue";
 export default defineComponent({
 
     methods:{
-        input_change_value(){
-            this.$emit('change_value', this.input.slug)
+        input_change_value(validate:boolean){
+            this.$emit('change_value', this.input.slug, validate)
         }
     },
 

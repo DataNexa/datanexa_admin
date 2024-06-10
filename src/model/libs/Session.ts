@@ -1,4 +1,4 @@
-
+import { getToken } from "./TokenManager"
 enum type_session { TOKEN, SESSION, SESSION_TEMP }
 
 class Session {
@@ -16,11 +16,11 @@ class Session {
     }
     
     static recoverTokenValue():string|undefined {
-        // verifica se existe um cookie com 
-        if(!Session.token){
-            Session.token = new Session(type_session.TOKEN, "")
+        const token = getToken()
+        if(!Session.token && token){
+            Session.token = new Session(type_session.TOKEN, token)
         }
-        return Session.token.value
+        return Session.token?.value
     }
 
     static saveTempSession(value:string) {
@@ -67,8 +67,8 @@ class Session {
         return false
     }
 
-    static getSessionBy(types:string):string|undefined {
-        if(['TOKEN', 'SESSION', 'SESSION_TEMP'].includes(types)){
+    static getSessionBy(type:string):string|undefined {
+        if(['TOKEN', 'SESSION', 'SESSION_TEMP'].includes(type)){
             if(type_session[type_session.SESSION] == 'TOKEN'){
                 return Session.recoverTokenValue()
             }

@@ -23,7 +23,7 @@ const regs:{[key:string]:string} = {
 export default defineComponent({
     data(){
         return {
-            showError:false,
+            showError:this.input.showError ? this.input.showError : false,
             see:false,
             inptype:this.input.text?.type,
             value: this.input.text ? this.input.text.value : "" 
@@ -51,7 +51,6 @@ export default defineComponent({
 
             if(this.input.text){
                 this.input.text.value = this.value
-                this.$emit('input_change_value')
             }
 
             if (this.input.text?.regex) {
@@ -68,7 +67,7 @@ export default defineComponent({
                 if(this.input.text.value && reg.test(this.input.text.value)){
                     this.input.validate = true
                     this.showError = false
-                    return
+                    return this.$emit('input_change_value', this.input.validate)
                 }
 
                 this.showError = true
@@ -80,6 +79,8 @@ export default defineComponent({
                 this.input.validate = true
                 this.showError = false
             }
+
+            this.$emit('input_change_value', this.input.validate)
 
         }
 

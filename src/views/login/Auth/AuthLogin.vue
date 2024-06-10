@@ -2,7 +2,12 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="container ">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <IconLogoQuadrado class="mx-auto d-block"/>
+                    </div>
+                </div>
                 <div class="row justify-content-center pt-5">
                     <div class="bg-white text-start rounded col-11 col-md-9 col-lg-6">
                         <FormVue 
@@ -22,9 +27,9 @@
 
 import { defineComponent } from 'vue';
 import FormVue from '@/components/FormVue.vue';
-
+import IconLogoQuadrado from '@/components/icons/IconLogoQuadrado.vue';
 export default defineComponent({
-    components: { FormVue },
+    components: { FormVue, IconLogoQuadrado },
     data(){
         return {
             buttons:[

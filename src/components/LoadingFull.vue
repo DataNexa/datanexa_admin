@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid p-0">
+    <div class="container-fluid p-0 m-0" style="height:100%; width:100%; position: fixed; overflow-y: auto; overflow-x: hidden; background-color: #0052EC;">
         <img class="logo-animation d-block mx-auto" src="/datanexa_icon.png"/>
         <div v-if="percent > 0">
             <div class="loading-data ">

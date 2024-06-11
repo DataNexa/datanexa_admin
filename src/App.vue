@@ -5,6 +5,7 @@ import LoadingFull from "./components/LoadingFull.vue"
 import Main from "./views/app/Main.vue"
 import MainLogin from "./views/login/MainLogin.vue"
 import authService from "./model/services/auth.service"
+import Session from "./model/libs/Session"
 
 export default defineComponent({
 	created() {
@@ -16,13 +17,18 @@ export default defineComponent({
     data(){
         return {
 			loading:false,
-			component:"MainLogin",
+			component:"LoadingFull",
 			keyLoading:1,
 			percentLoading:1
         }
     },
 	methods:{
-		loadingData(){
+		async loadingData(){
+
+			let token = Session.getSessionBy('token')
+			if(!token) {
+				return this.component = "MainLogin"
+			}
 
 			// authService.login('andreifcoelho@gmail.com', 'mushmush123')
 

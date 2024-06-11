@@ -2,7 +2,7 @@
     <label class="form-label">{{ input.text?.label }} <span><small><i>{{ input.required && asterisco ? '(*)' : '' }}</i></small></span></label>
     <div class="input-group pb-2">
         <span v-if="input.text?.icon" class="input-group-text" id="basic-addon1" v-html="input.text?.icon"></span>
-        <input :placeholder="input.text?.placeholder" @focusout="isValid" :class="`form-control ${(showError?'boder border-danger':'')}`" :type="inptype" v-model="value"/>
+        <input :placeholder="input.text?.placeholder" @input="onTyping" @focusout="isValid" :class="`form-control ${(showError?'boder border-danger':'')}`" :type="inptype" v-model="value"/>
         <span v-if="input.text?.type == 'password'" @click="changeType" class="input-group-text" style="cursor:pointer;" v-html="see ? '&#128515;' : '&#128518;'"></span>
     </div>
     <p class="text-danger pb-3 my-0" v-if="showError"><small><i>{{ (input.messageError ? input.messageError : "campo inválido") }}</i></small></p>
@@ -45,6 +45,10 @@ export default defineComponent({
         changeType(){
             this.inptype = this.inptype == 'password' ? 'text' : 'password'
             this.see = !this.see
+        },
+
+        onTyping(e:Event){
+            this.$emit('onTypingEvent', e)
         },
 
         isValid(){

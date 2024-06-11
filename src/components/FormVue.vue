@@ -32,17 +32,18 @@ export default defineComponent({
     methods:{
         click_button(slug:string, success?:boolean){
             if(success){
-                let status = false         
+                let status = true         
                 for(const inp of this.formdata.inputs){
                     if(inp.required && !inp.validate){
                         inp.showError = true
-                        status = true
+                        status = false
                     }
                 }
-                if(status){
+                if(!status){
                     for(const btn of this.buttons){
                         if(btn.slug == slug && btn.canLoad){
                             btn.loading = false
+                            return
                         }
                     }
                 }

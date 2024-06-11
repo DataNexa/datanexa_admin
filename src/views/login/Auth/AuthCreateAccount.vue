@@ -7,6 +7,11 @@
                         <IconLogoQuadrado class="mx-auto d-block"/>
                     </div>
                 </div>
+                <div class="row" v-if="showError.status">
+                    <div class="col">
+                        <p class="text-center bg-white text-danger">{{  showError.message }}</p>
+                    </div>
+                </div>
                 <div class="row justify-content-center pt-5">
                     <div class="bg-white text-start rounded col-11 col-md-9 col-lg-6">
                         <h2 class="text-center py-4">Crie sua Conta:</h2>
@@ -27,17 +32,24 @@
 import FormVue from '@/components/FormVue.vue';
 import IconLogoQuadrado from '@/components/icons/IconLogoQuadrado.vue';
 import { defineComponent } from 'vue'
+import authService from '@/model/services/auth.service';
 
 export default defineComponent({
     components:{FormVue, IconLogoQuadrado},
     data(){
         return {
+            showError:{
+                status:false,
+                message:'mensagem de erro'
+            },
             buttons:[
                 {
                     slug:'criar',
                     css:'btn btn-info d-block ms-auto',
                     text:'Salvar Dados ➔',
-                    canLoad:true
+                    success:true,
+                    canLoad:true,
+                    loading:false
                 }
             ],
             formdata:{
@@ -48,7 +60,8 @@ export default defineComponent({
                         text:{
                             label:'Nome',
                             type:'text',
-                            placeholder:'Seu nome completo'
+                            placeholder:'Seu nome completo',
+                            value:''
                         }
                     },
                     {
@@ -59,7 +72,8 @@ export default defineComponent({
                             label:'E-mail',
                             type:'email',
                             regex:'email',
-                            placeholder:'Seu e-mail'
+                            placeholder:'Seu e-mail',
+                            value:''
             
                         }
                     },
@@ -71,7 +85,8 @@ export default defineComponent({
                             label:'Senha',
                             type:'text',
                             regex:'senha',
-                            placeholder:'digite uma senha'
+                            placeholder:'digite uma senha',
+                            value:''
             
                         }
                     }
@@ -80,8 +95,21 @@ export default defineComponent({
         }
     },
     methods:{
-        on_click(){
+        async on_click(){
+            
+            let nome  = this.formdata.inputs[0].text.value
+            let email = this.formdata.inputs[1].text.value
+            let senha = this.formdata.inputs[2].text.value
 
+            let resp  = await authService.create(nome, email, senha)
+
+            if(resp.status){
+                return this.$emit('redirectTo', 'AuthRecover', email, true)
+            }
+
+            this.showError.status = true 
+            this.showError.message = resp.message
+            this.buttons[0].loading = false
         }
     }
 })

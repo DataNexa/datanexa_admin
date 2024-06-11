@@ -3,7 +3,7 @@ enum alert_type {
 }
 
 type alert_i = {
-    type:alert_type,
+    type:alert_type|string,
     text:string,
     show?:boolean
 }

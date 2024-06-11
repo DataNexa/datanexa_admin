@@ -37,7 +37,7 @@ interface header_i {
 
 interface body_res {
     message?:string,
-    code?:number,
+    code:number,
     body?:any,
     session?:string,
     redirect?:string
@@ -45,7 +45,7 @@ interface body_res {
 
 interface resp {
     message?:string,
-    code?:number,
+    code:number,
     body?:any
 }
 
@@ -58,7 +58,7 @@ const logoff = async () => {
     Session.expireSessions()
 }
 
-const request = async (header:header_i, body:Object):Promise<resp> => {
+const request = async (header:header_i, body?:Object):Promise<resp> => {
 
     const headers:{'Content-Type':string, session?:string} = {
         'Content-Type':'application/json'
@@ -71,7 +71,7 @@ const request = async (header:header_i, body:Object):Promise<resp> => {
     const response = await fetch(import.meta.env.VITE_API_URL+header.route, {
         method:header.method,
         headers:headers,
-        body:JSON.stringify(body)
+        body: body ? JSON.stringify(body) : ''
     })
 
     const body_res = (await response.json() as body_res)

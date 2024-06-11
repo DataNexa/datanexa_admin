@@ -1,5 +1,5 @@
 <template>
-    <component :is="component" :input="input" :asterisco="asterisco" @input_change_value="input_change_value"/>
+    <component :is="component" :input="input" :asterisco="asterisco" @onTypingEvent="typing" @input_change_value="input_change_value"/>
 </template>
 
 <script lang="ts">
@@ -19,6 +19,9 @@ export default defineComponent({
     methods:{
         input_change_value(validate:boolean){
             this.$emit('change_value', this.input.slug, validate)
+        },
+        typing(e:Event){
+            this.$emit('onTypingEvent', this.input.slug, e)
         }
     },
 

@@ -11,12 +11,20 @@ import Session from "./Session"
  * - e outros relacionados a requisições e sessões
  */
 
-
+type redirectFunction = (route:string, body_res:body_res) => any;
 
 class Req {
 
-    private constructor(){
+    private static onRedirect:redirectFunction = () => {}
 
+    private constructor(){}
+
+    static setRedirect(onRedirect:redirectFunction){
+        this.onRedirect = onRedirect
+    }
+
+    static redirectTo(route:string, body_res:resp){
+        this.onRedirect(route, body_res)
     }
 
 }
@@ -27,7 +35,30 @@ interface header_i {
     sess_type?:string
 }
 
-const request = async (header:header_i, body:Object) => {
+interface body_res {
+    message?:string,
+    code:number,
+    body?:any,
+    session?:string,
+    redirect?:string
+}
+
+interface resp {
+    message?:string,
+    code:number,
+    body?:any
+}
+
+const setRedirection = (callback:redirectFunction) => {
+    Req.setRedirect(callback)
+}
+
+const logoff = async () => {
+    Session.deleteToken()
+    Session.expireSessions()
+}
+
+const request = async (header:header_i, body?:Object):Promise<resp> => {
 
     const headers:{'Content-Type':string, session?:string} = {
         'Content-Type':'application/json'
@@ -40,12 +71,29 @@ const request = async (header:header_i, body:Object) => {
     const response = await fetch(import.meta.env.VITE_API_URL+header.route, {
         method:header.method,
         headers:headers,
-        body:JSON.stringify(body)
+        body: body ? JSON.stringify(body) : ''
     })
 
-    
+    const body_res = (await response.json() as body_res)
+
+    if(body_res.session){
+        Session.saveSession(body_res.session)
+    }
+
+    const resp = { body:body_res.body, code:body_res.code, message:body_res.message }
+
+    if(body_res.redirect){
+        Req.redirectTo(body_res.redirect, resp)
+    }
+
+    if(response.status == 401){
+        Session.expireSessions()
+        Req.redirectTo('login', resp)
+    }
+
+    return resp
 
 }
 
 
-export default request
+export { request, setRedirection, logoff }

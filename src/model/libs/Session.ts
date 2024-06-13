@@ -1,4 +1,4 @@
-
+import { getToken } from "./TokenManager"
 enum type_session { TOKEN, SESSION, SESSION_TEMP }
 
 class Session {
@@ -16,24 +16,27 @@ class Session {
     }
     
     static recoverTokenValue():string|undefined {
-        // verifica se existe um cookie com 
-        if(!Session.token){
-            Session.token = new Session(type_session.TOKEN, "")
+        const token = getToken()
+        if(!Session.token && token){
+            Session.token = new Session(type_session.TOKEN, token)
         }
-        return Session.token.value
+        return Session.token?.value
     }
 
     static saveTempSession(value:string) {
-        this.session_temp = new Session(type_session.SESSION_TEMP, value)
+        console.log("salvou sessao temporaria: ");
+        console.log(value);
+        
+        Session.session_temp = new Session(type_session.SESSION_TEMP, value)
     }
 
     static saveSession(value:string) {
-        this.session = new Session(type_session.SESSION, value)
+        Session.session = new Session(type_session.SESSION, value)
     }
 
     static getTempSessionValue(){
         const temp = Session.session_temp?.value
-        Session.session_temp = undefined
+        // Session.session_temp = undefined
         return temp
     }
 
@@ -41,8 +44,14 @@ class Session {
         return Session.session?.value
     }
 
-    static expireSession(){
-        this.session = undefined
+    static expireSessions(){
+        Session.session = undefined
+        Session.session_temp = undefined
+    }
+
+    static deleteToken(){
+        // deletar cookie
+        Session.token = undefined
     }
 
     static getAnSession(){
@@ -61,18 +70,21 @@ class Session {
         return false
     }
 
-    static getSessionBy(types:string):string|undefined {
-        if(['TOKEN', 'SESSION', 'SESSION_TEMP'].includes(types)){
-            if(type_session[type_session.SESSION] == 'TOKEN'){
+    static getSessionBy(type:string):string|undefined {
+        if(['TOKEN', 'SESSION', 'SESSION_TEMP'].includes(type)){
+            console.log("aqui 1");
+            
+            if(type_session[type_session.TOKEN] == type){
                 return Session.recoverTokenValue()
             }
-            if(type_session[type_session.SESSION] == 'SESSION'){
+            if(type_session[type_session.SESSION] == type){
                 return Session.getSessionValue()
             }
-            if(type_session[type_session.SESSION] == 'SESSION_TEMP'){
+            if(type_session[type_session.SESSION_TEMP] == type){
                 return Session.getTempSessionValue()
             }
         }
+        return undefined
     }
 
 

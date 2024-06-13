@@ -2,10 +2,6 @@
     <div class="container-fluid ">
         
         <div class="row">
-            <PassModalForm 
-                v-if="showPassInput" 
-                @close_modal="showPassInput = false"
-            />
             <div class="col-12 text-center mt-5">
                 <IconLogoQuadrado/>
             </div>
@@ -16,20 +12,20 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12">
+            <div class="col-12" v-if="listUser.length > 0">
                 <p class="text-center text-white p-3">Selecione um Usuário:</p>
             </div>
-            <div class="col-12">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <CardUserLogin v-for="user,index in listUser" :key="index"
-                            :userType="user.getUserType()"
-                            :userSlug="user.getSlug()"
-                            :userStatus="user.isConnected()"
-                            @clickUser="clickUser(index)"
-                        />
-                    </div>
+            <div class="col-12" v-if="listUser.length > 0">
+                <div class="row justify-content-center">
+                    <CardUserLogin v-for="user,index in listUser" :key="index"
+                        :userType="user.tipo"
+                        :userSlug="user.slug"
+                        @clickUser="clickUser"
+                    ></CardUserLogin>
                 </div>
+            </div>
+            <div class="col-12" v-else>
+                <NotUser></NotUser>
             </div>
 
         </div>
@@ -41,23 +37,30 @@
 import { defineComponent } from "vue"
 
 import IconLogoQuadrado from "@/components/icons/IconLogoQuadrado.vue"
-import CardUserLogin from "./CardUserLogin.vue"
-import { User, account} from "@/model/AccountFactory"
-import PassModalForm from "@/views/login/includes/PassModalForm.vue"
+import CardUserLogin from "../includes/CardUserLogin.vue"
+import NotUser from "./NotUser.vue";
 
 export default defineComponent({
-    components:{ IconLogoQuadrado, CardUserLogin, PassModalForm },
+    components:{ IconLogoQuadrado, NotUser, CardUserLogin },
     created() {
-        this.listUser = account.getUsers();
+        // this.listUser = account.getUsers();
     },
-    data():{listUser:User[], showPassInput:Boolean}{
+    data(){
         return {
-            listUser:[],
-            showPassInput:true
+            listUser:[
+                /*
+                {
+                tipo:'GHOST',
+                slug:'andreifcoelho@sqmidia#234343242434345'
+                }
+                */
+            ],
+            showPassInput:false
         }
     },
     methods:{
         clickUser(k:number){
+            /*
             if(this.listUser[k].isConnected()){
                 // pega o token_user e inicia a sessão
                 // gera a sessão do usuário
@@ -66,6 +69,7 @@ export default defineComponent({
             } else {
                 // solicita o envio da senha
             }
+                */
 
         }
     }

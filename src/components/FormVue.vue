@@ -30,27 +30,60 @@ import ButtonVue from "@/components/ButtonVue.vue"
 export default defineComponent({
 
     methods:{
+
+        enableInputsAndButtons(){
+            for(const inp of this.formdata.inputs){
+                inp.readonly = false
+            }
+            for(const btn of this.buttons){
+                btn.disable = false
+                if(btn.canLoad){
+                    btn.loading = false
+                }
+            }
+        },
+
+        disableInputsAndButtons(){
+            for(const inp of this.formdata.inputs){
+                inp.readonly = true
+            }
+            for(const btn of this.buttons){
+                btn.disable = true
+            }
+        },
+
         click_button(slug:string, success?:boolean){
             if(success){
-                let status = false         
+                let status = true         
                 for(const inp of this.formdata.inputs){
                     if(inp.required && !inp.validate){
                         inp.showError = true
-                        status = true
+                        status = false
                     }
                 }
-                if(status){
+                if(!status){
                     for(const btn of this.buttons){
-                        if(btn.slug == slug && btn.canLoad){
+                        if(btn.canLoad){
                             btn.loading = false
                         }
                     }
-                }
+                } 
+                if(status)
+                    return this.$emit('click_button', slug)
+                else return false
             }
+
             this.$emit('click_button', slug)
         }
     },
     created() {
+        
+        if(this.formdata.inputsControl?.disable == true){
+            this.disableInputsAndButtons()
+        } else {
+            this.enableInputsAndButtons()
+        }
+
         if(this.formdata.asterisco)
         for(const inp of this.formdata.inputs){
             if(inp.required){
@@ -58,6 +91,7 @@ export default defineComponent({
                 break
             }
         }
+
     },
     components:{
         InputVue, ButtonVue
@@ -77,6 +111,17 @@ export default defineComponent({
             type:Object as () => button_i[]
         },
     },
+    watch:{
+        'formdata.inputsControl.disable':{
+            handler(newValue: boolean) {
+                if(newValue == true){
+                    this.disableInputsAndButtons()
+                } else {
+                    this.enableInputsAndButtons()
+                }
+            },
+        }
+    }
 
 })
 

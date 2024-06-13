@@ -30,7 +30,7 @@ export default defineComponent({
 
     methods:{
         getType():string {
-            return alert_type[this.alert.type].toLowerCase()
+            return typeof this.alert.type == 'string' ? this.alert.type : alert_type[this.alert.type].toLowerCase()
         },
         show() {
             setTimeout(() => {

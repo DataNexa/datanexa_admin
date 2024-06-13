@@ -15,7 +15,7 @@ type text_i = {
     regex?:string|RegExp,
     placeholder?:string,
     icon?:string,
-    value?:string
+    value?:string,
 }
 
 type radio_i = {
@@ -41,7 +41,8 @@ type input_i = {
     validate?:boolean,
     message?:string,
     messageError?:string,
-    showError?:boolean
+    showError?:boolean,
+    readonly?:boolean
 }
 
 export type { checkbox_i, text_i, input_i, radio_i, select_i }

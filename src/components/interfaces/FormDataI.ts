@@ -5,5 +5,8 @@ export type formdata_i = {
     title?:string
     description?:string,
     messages?:string[],
-    asterisco?:boolean
+    asterisco?:boolean,
+    inputsControl?:{
+        disable?:boolean
+    }
 }

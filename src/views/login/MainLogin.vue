@@ -32,7 +32,7 @@ import { getToken } from '@/model/libs/TokenManager';
 export default defineComponent({
     components:{ LoadingFull, OptionsUser, AuthMain, AuthLogin, AuthCreateAccount, AuthRecover },
     created() {
-        this.component = getToken() == null ? "AuthMain" : "OptionsUser"
+        this.checkToken()
     },
     data() {
         return {
@@ -44,10 +44,19 @@ export default defineComponent({
         }
     },
     methods:{
-        redirect(to:string, email?:string, checkCode?:boolean){
+
+        checkToken(){
+            this.component = getToken() == null ? "AuthMain" : "OptionsUser"
+        },
+
+        redirect(to?:string, email?:string, checkCode?:boolean){
             this.email     = email ? email : ''
             this.checkCode = checkCode ? checkCode : false
-            this.component = to
+            if(to) {
+                this.component = to
+                return
+            }
+            this.checkToken()
         }
     }
 })

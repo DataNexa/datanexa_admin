@@ -62,7 +62,8 @@ export default defineComponent({
                 text:{
                     type:"text",
                     placeholder:"CÓDIGO",
-                    value:''
+                    value:'',
+                    icon:'📝'
                 }
             },
             button:{
@@ -81,39 +82,69 @@ export default defineComponent({
             this.isCheckingCode = false
         },
 
+        async verifyEmail(input:HTMLInputElement){
+            return await authService.confirmEmail(this.email, input.value)
+        },
+
+        async recover(input:HTMLInputElement){
+            return await authService.recover(this.email, input.value)
+        },
+
+        onLoadData(status:boolean){
+            this.$emit('statusChange', status)
+        },
+
         async onChange(e:Event){
-
+           
             const input = e.target as HTMLInputElement;
-
             this.cleanMsg()
-            // se o código tiver 6 caracteres
-            // envia para análise no servidor
-            
+
             if(input.value.length == 6){
+
+                this.onLoadData(true)
                 this.isCheckingCode = true
-                const resp = await authService.confirmEmail(this.email, input.value)
-                this.input.text.value = ''
-                if(resp.status){
-                    this.alertObj.show = true
+                let resp = undefined
+
+                if(this.codeType == 'confirmation'){
+                    resp = await this.verifyEmail(input)
+                } else {
+                    resp = await this.recover(input)
+                }
+
+                if(resp && resp.status && this.codeType == 'confirmation'){
+                    this.input.text.value = ''
+                    this.alertObj.show    = true
                     setTimeout(() => {
                         this.$emit('redirectTo', 'AuthLogin')
                     }, 1000)
+                } else
+                if(resp && resp.status && this.codeType == 'recover'){
+                    setTimeout(() => {
+                        this.$emit('redirectTo', 'ChangePass')
+                    }, 1000)
                 } else {
                     this.isCheckingCode = false
-                    this.errorMsg = resp.message
+                    this.errorMsg       = resp.message
+                    this.onLoadData(false)
                 }
+
             }
+
         },
         async onClick(){
             // envia novo cógido
             this.cleanMsg()
             this.isCheckingCode = true
+            this.onLoadData(true)
             const resp = await authService.sendCode(this.email, this.codeType)
+
             if(!resp.status){
                 this.errorMsg = resp.message
             } else {
                 this.infoMsg = 'Foi enviado um novo código para seu e-mail'
             }
+
+            this.onLoadData(false)
             this.isCheckingCode = false
         }
     }

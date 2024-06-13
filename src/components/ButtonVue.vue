@@ -1,6 +1,6 @@
 <template>
     <div v-if="button.canLoad && button.loading" :class="`spinner-border text-primary ${button.css}`" ></div>
-    <button v-else type="button" :class="button.css" v-on:click="clickEvt">{{ button.text }}</button>
+    <button v-else type="button" :class="button.css" v-on:click="clickEvt" :disabled="button.disable ? button.disable : false">{{ button.text }}</button>
 </template>
 
 <script lang="ts">

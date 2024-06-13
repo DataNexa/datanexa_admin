@@ -23,6 +23,7 @@
                     </div>
                 </div>
             </div>
+            <BackToMain @redirectTo="$emit('redirectTo', 'AuthMain')" :disable="formdata.inputsControl.disable"/>
         </div>
     </div>
 </template>
@@ -33,9 +34,11 @@ import FormVue from '@/components/FormVue.vue';
 import IconLogoQuadrado from '@/components/icons/IconLogoQuadrado.vue';
 import { defineComponent } from 'vue'
 import authService from '@/model/services/auth.service';
+import BackToMain from '../BackToMain.vue';
 
 export default defineComponent({
-    components:{FormVue, IconLogoQuadrado},
+
+    components:{FormVue, IconLogoQuadrado, BackToMain},
     data(){
         return {
             showError:{
@@ -45,7 +48,7 @@ export default defineComponent({
             buttons:[
                 {
                     slug:'criar',
-                    css:'btn btn-info d-block ms-auto',
+                    css:'btn btn-outline-primary d-block ms-auto',
                     text:'Salvar Dados ➔',
                     success:true,
                     canLoad:true,
@@ -53,11 +56,15 @@ export default defineComponent({
                 }
             ],
             formdata:{
+                inputsControl:{
+                    disable:false
+                },
                 inputs:[
                     {
                         slug:'nome',
                         required:true,
                         text:{
+                            icon:'🙂',
                             label:'Nome',
                             type:'text',
                             placeholder:'Seu nome completo',
@@ -73,7 +80,8 @@ export default defineComponent({
                             type:'email',
                             regex:'email',
                             placeholder:'Seu e-mail',
-                            value:''
+                            value:'',
+                            icon:"✉️"
             
                         }
                     },
@@ -86,7 +94,8 @@ export default defineComponent({
                             type:'text',
                             regex:'senha',
                             placeholder:'digite uma senha',
-                            value:''
+                            value:'',
+                            icon:"🔒",
             
                         }
                     }
@@ -97,6 +106,8 @@ export default defineComponent({
     methods:{
         async on_click(){
             
+            this.formdata.inputsControl.disable = true
+
             let nome  = this.formdata.inputs[0].text.value
             let email = this.formdata.inputs[1].text.value
             let senha = this.formdata.inputs[2].text.value
@@ -106,7 +117,9 @@ export default defineComponent({
             if(resp.status){
                 return this.$emit('redirectTo', 'AuthRecover', email, true)
             }
-
+            
+            this.formdata.inputsControl.disable = false
+        
             this.showError.status = true 
             this.showError.message = resp.message
             this.buttons[0].loading = false

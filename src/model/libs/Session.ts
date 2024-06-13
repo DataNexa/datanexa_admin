@@ -24,16 +24,19 @@ class Session {
     }
 
     static saveTempSession(value:string) {
-        this.session_temp = new Session(type_session.SESSION_TEMP, value)
+        console.log("salvou sessao temporaria: ");
+        console.log(value);
+        
+        Session.session_temp = new Session(type_session.SESSION_TEMP, value)
     }
 
     static saveSession(value:string) {
-        this.session = new Session(type_session.SESSION, value)
+        Session.session = new Session(type_session.SESSION, value)
     }
 
     static getTempSessionValue(){
         const temp = Session.session_temp?.value
-        Session.session_temp = undefined
+        // Session.session_temp = undefined
         return temp
     }
 
@@ -42,13 +45,13 @@ class Session {
     }
 
     static expireSessions(){
-        this.session = undefined
-        this.session_temp = undefined
+        Session.session = undefined
+        Session.session_temp = undefined
     }
 
     static deleteToken(){
         // deletar cookie
-        this.token = undefined
+        Session.token = undefined
     }
 
     static getAnSession(){
@@ -69,13 +72,15 @@ class Session {
 
     static getSessionBy(type:string):string|undefined {
         if(['TOKEN', 'SESSION', 'SESSION_TEMP'].includes(type)){
-            if(type_session[type_session.SESSION] == 'TOKEN'){
+            console.log("aqui 1");
+            
+            if(type_session[type_session.TOKEN] == type){
                 return Session.recoverTokenValue()
             }
-            if(type_session[type_session.SESSION] == 'SESSION'){
+            if(type_session[type_session.SESSION] == type){
                 return Session.getSessionValue()
             }
-            if(type_session[type_session.SESSION] == 'SESSION_TEMP'){
+            if(type_session[type_session.SESSION_TEMP] == type){
                 return Session.getTempSessionValue()
             }
         }

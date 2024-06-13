@@ -1,12 +1,11 @@
 <template>
     <div @click="clickUser"
-    class="cardUserLogin col-12 col-md-4 col-lg-3 bg-white rounded text-center p-2">
-        <IconAdmin v-if="userType == 'ADMIN' || userType == 'ADMIN_CLIENT'" />
-        <IconGhost v-else-if="userType == 'GHOST'" />
-        <IconUser v-else/>
+        class="cardUserLogin col-12 col-md-4 col-lg-3 bg-white rounded text-center p-2">
+        <IconAdmin :scale="1" :fill="'primary'" v-if="userType == 'ADMIN' || userType == 'ADMIN_CLIENT'" />
+        <IconGhost :scale="1" :fill="'primary'" v-else-if="userType == 'GHOST'" />
+        <IconUser  :scale="1" :fill="'primary'" v-else/>
         <h4>{{ userType }}</h4>
         <h5><i>{{ userSlug }}</i></h5>
-        <span :class="`text-${(userStatus?'primary':'danger')}`">{{ userStatus ? "Conectado" : "Não conectado" }}</span>
     </div>
 </template>
 
@@ -26,11 +25,6 @@ export default defineComponent({
         userSlug:{
             type:String,
             required:true
-        },
-        userStatus:{
-            // conectado ou nao conectado
-            type:Boolean,
-            required:true
         }
     },
 
@@ -38,7 +32,7 @@ export default defineComponent({
 
     methods:{
         clickUser(){
-            this.$emit('clickUser')
+            this.$emit('clickUser', this.userSlug)
         }
     }
 

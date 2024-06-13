@@ -4,5 +4,6 @@ export type button_i = {
     text:string,
     success?:boolean,
     loading?:boolean,
-    canLoad?:boolean
+    canLoad?:boolean,
+    disable?:boolean
 }

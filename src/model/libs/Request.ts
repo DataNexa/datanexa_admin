@@ -68,11 +68,16 @@ const request = async (header:header_i, body?:Object):Promise<resp> => {
         headers.session = Session.getSessionBy(header.sess_type)
     }
 
-    const response = await fetch(import.meta.env.VITE_API_URL+header.route, {
+    let dataReq  = body ? {
         method:header.method,
         headers:headers,
-        body: body ? JSON.stringify(body) : ''
-    })
+        body: JSON.stringify(body)
+    } : {
+        method:header.method,
+        headers:headers
+    }
+
+    const response = await fetch(import.meta.env.VITE_API_URL+header.route, dataReq)
 
     const body_res = (await response.json() as body_res)
 
@@ -86,7 +91,7 @@ const request = async (header:header_i, body?:Object):Promise<resp> => {
         Req.redirectTo(body_res.redirect, resp)
     }
 
-    if(response.status == 401){
+    if(Session.isLogged() && response.status == 401){
         Session.expireSessions()
         Req.redirectTo('login', resp)
     }

@@ -28,8 +28,19 @@ import AuthMain from "./Auth/AuthMain.vue"
 import AuthCreateAccount from './Auth/AuthCreateAccount.vue';
 import AuthRecover from './Auth/AuthRecover.vue';
 import { getToken } from '@/model/libs/TokenManager';
+import authService from '@/model/services/auth.service';
+import Account from '@/model/Entidades/Account';
+import { App } from '@/model/Entidades/App';
 
 export default defineComponent({
+
+    props:{
+        innerModule:{
+            type:String,
+            required:false
+        }
+    },
+
     components:{ LoadingFull, OptionsUser, AuthMain, AuthLogin, AuthCreateAccount, AuthRecover },
     created() {
         this.checkToken()
@@ -45,11 +56,29 @@ export default defineComponent({
     },
     methods:{
 
-        checkToken(){
-            this.component = getToken() == null ? "AuthMain" : "OptionsUser"
+        async checkToken(){
+
+            const token = getToken()
+
+            if(token == null){
+                this.component = "AuthMain"
+                return 
+            }
+
+            const accRepo = await authService.getAccountData()
+
+            if(accRepo.status && accRepo.body){
+                const acc = new Account(accRepo.body.nome, accRepo.body.email)
+                App.setAccount(acc)
+            }
+
+            this.component = "OptionsUser"
         },
 
         redirect(to?:string, email?:string, checkCode?:boolean){
+            if(to == 'system'){
+                return this.$emit('changeArea', 'system')
+            }
             this.email     = email ? email : ''
             this.checkCode = checkCode ? checkCode : false
             if(to) {

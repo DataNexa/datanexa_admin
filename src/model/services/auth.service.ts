@@ -84,6 +84,7 @@ export default {
     },
 
     async confirmEmail(email:string, codigo:string):Promise<response_err>{
+    
         const resp = await request({
             route:'account/confirmEmail',
             method:'post'
@@ -91,7 +92,20 @@ export default {
             codigo:codigo,
             email:email
         })
+    
         return { status: resp.code == 200, message: resp.message ? resp.message : ''}
+    
+    },
+
+    async getAccountData(){
+
+        const resp = await request({
+            sess_type:'TOKEN',
+            route:'account/getAccountData',
+            method:'get'
+        })
+
+        return { status: resp.code == 200, body:resp.body, message: resp.message ? resp.message : ''}
     }
 
     

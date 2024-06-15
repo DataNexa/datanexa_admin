@@ -20,7 +20,6 @@ import { alert_type, type alert_i } from "@/components/interfaces/AlertI"
 import AlertVue from "@/components/AlertVue.vue"
 import FormVue from "@/components/FormVue.vue"
 import authService from "@/model/services/auth.service"
-import Session from "@/model/libs/Session"
 
 export default defineComponent({
 

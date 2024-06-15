@@ -4,8 +4,8 @@ import {defineComponent} from "vue"
 import LoadingFull from "./components/LoadingFull.vue"
 import Main from "./views/app/Main.vue"
 import MainLogin from "./views/login/MainLogin.vue"
-import authService from "./model/services/auth.service"
 import Session from "./model/libs/Session"
+import { App } from "./model/Entidades/App"
 
 export default defineComponent({
 	created() {
@@ -19,36 +19,22 @@ export default defineComponent({
 			loading:false,
 			component:"LoadingFull",
 			keyLoading:1,
-			percentLoading:1
+			percentLoading:1,
+			innerModule:''
         }
     },
 	methods:{
 		async loadingData(){
 
-			let token = Session.getSessionBy('token')
-			if(!token) {
+			let token = Session.getSessionBy('TOKEN')
+
+			if(!token || !App.isConnected()) {	
 				return this.component = "MainLogin"
 			}
 
-			// authService.login('andreifcoelho@gmail.com', 'mushmush123')
-
-			// verificar se existe o token_account
-			// se nao existir exibir a tela de login
-
-			/*
-			// apenas para exibição
-			const interval = setInterval(() => {
-				this.percentLoading += 25
-				if(this.percentLoading >= 100){
-					this.percentLoading = 100
-					setTimeout(() => {
-						this.loading = false
-						this.component = "Main"
-					}, 1000);
-					clearInterval(interval)
-				}
-			}, 1000)
-			*/
+			if(App.isConnected()){
+				return this.component = "Main"
+			}
 		}
 	}
 })
@@ -60,7 +46,7 @@ export default defineComponent({
 		<LoadingFull :percent="percentLoading"/>
 	</div>
 	<div v-else>
-		<component :is="component"/>
+		<component :is="component" :innerModule="innerModule" @changeArea="loadingData"/>
 	</div>
 	
 </template>

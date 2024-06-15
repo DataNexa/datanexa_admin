@@ -3,10 +3,12 @@
         xml:space="preserve" 
         :width="`${sized}px`" :height="`${sized}px`" 
         version="1.1" 
-        style="shape-rendering:geometricPrecision; 
-        text-rendering:geometricPrecision; 
-        image-rendering:optimizeQuality; 
-        fill-rule:evenodd; clip-rule:evenodd"
+        style=
+        "   shape-rendering:geometricPrecision; 
+            text-rendering:geometricPrecision; 
+            image-rendering:optimizeQuality; 
+            fill-rule:evenodd; clip-rule:evenodd
+        "
         preserveAspectRatio="xMidYMid meet"
         :viewBox="`0 0 ${sized} ${sized}`"
         xmlns:xlink="http://www.w3.org/1999/xlink"

@@ -6,6 +6,7 @@ class Session {
     private type:type_session
     private value:string 
 
+    private static logged:boolean = false
     private static session:Session|undefined
     private static session_temp:Session|undefined
     private static token:Session|undefined
@@ -24,13 +25,11 @@ class Session {
     }
 
     static saveTempSession(value:string) {
-        console.log("salvou sessao temporaria: ");
-        console.log(value);
-        
         Session.session_temp = new Session(type_session.SESSION_TEMP, value)
     }
 
     static saveSession(value:string) {
+        Session.logged  = true
         Session.session = new Session(type_session.SESSION, value)
     }
 
@@ -45,6 +44,7 @@ class Session {
     }
 
     static expireSessions(){
+        Session.logged = false
         Session.session = undefined
         Session.session_temp = undefined
     }
@@ -72,8 +72,6 @@ class Session {
 
     static getSessionBy(type:string):string|undefined {
         if(['TOKEN', 'SESSION', 'SESSION_TEMP'].includes(type)){
-            console.log("aqui 1");
-            
             if(type_session[type_session.TOKEN] == type){
                 return Session.recoverTokenValue()
             }
@@ -85,6 +83,10 @@ class Session {
             }
         }
         return undefined
+    }
+
+    static isLogged(){
+        return Session.logged
     }
 
 

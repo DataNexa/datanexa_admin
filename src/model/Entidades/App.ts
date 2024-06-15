@@ -1,4 +1,5 @@
 import User from "./User";
+import Account from './Account'
 
 enum system_type {
     LOGIN,
@@ -12,31 +13,65 @@ enum system_type {
  */
 class App {
 
-    private user:User
-    private system_type:system_type = system_type.LOGIN
-    private static app:App = new App()
+    private static account?:Account
+    private static user?:User
+    private static system_type:system_type = system_type.LOGIN
+    private static connected:boolean = false
 
-    private constructor(){
-        // resgatar as informações a partir dos cookies, tokens e sessões
-        // gerar usuário com as informações
-        // gerar o tipo de systema 'system_type' a partir das informações do usuário
-        this.user = new User()
+    private constructor(){ }
+
+    static setAccount(account:Account) {
+        if(!App.account){
+            App.connected = true
+            App.account = account
+        }
     }
 
-    private static instance():App {
-        return App.app
+    static isConnected(){
+        return App.connected
+    }
+
+    static getNomeAccount(){
+        return App.account?.getNome()
+    }
+
+    static getEmailAccount(){
+        return App.account?.getEmail()
+    }
+
+    static setUser(user:User){
+        if(!App.user){
+            App.user = user
+        }
+    }
+
+    static refreshLocalSystem(){
+        if (App.user) {
+            if(App.user.getClientSlug() != 'DataNexa'){
+                App.system_type = system_type.CLIENT
+            } else {
+                App.system_type = system_type.ADMIN
+            }
+        } else {
+            App.system_type = system_type.LOGIN
+        }       
     }
 
     /**
      * verifica se o usuário tem permissão para acessar um serviço na api
      */
-    userHasPermission(permission:string):boolean{
-        // return this.user.getPermissions().contain(permission)
-        return true
+    static userHasPermission(permission:string):boolean{
+        if(App.user) 
+            return App.user.havePermissions(permission, system_type[App.system_type])
+        return false
     }
 
-    getTypeSystem():system_type {
-        return this.system_type
+    static getTypeSystem():system_type {
+        return App.system_type
+    }
+
+    static getUserJson():Object|undefined {
+        return App.user?.getJson()
     }
 
 }

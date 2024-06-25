@@ -26,6 +26,8 @@ export default {
             route: 'account/listUsersAccount',
             method:'get'
         })
+
+        console.log(req);
         
         return { status:req.code == 200, list:(req.body as user[]) }
 

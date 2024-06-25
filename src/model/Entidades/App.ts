@@ -45,6 +45,14 @@ class App {
         }
     }
 
+    static getUser(){
+        return App.user
+    }
+
+    static havePagePermission(page:string){
+        return App.user ? App.user.havePagePermission(page) : false
+    }
+
     static refreshLocalSystem(){
         if (App.user) {
             if(App.user.getClientSlug() != 'DataNexa'){

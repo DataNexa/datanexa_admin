@@ -1,4 +1,5 @@
 
+import { App } from "../Entidades/App";
 import Session from "./Session"
 
 /**
@@ -58,7 +59,7 @@ const logoff = async () => {
     Session.expireSessions()
 }
 
-const request = async (header:header_i, body?:Object):Promise<resp> => {
+const request = async (header:header_i, body?:any):Promise<resp> => {
 
     const headers:{'Content-Type':string, session?:string} = {
         'Content-Type':'application/json'
@@ -66,6 +67,9 @@ const request = async (header:header_i, body?:Object):Promise<resp> => {
 
     if(header.sess_type){
         headers.session = Session.getSessionBy(header.sess_type)
+    } else {
+        let sess = Session.getSessionBy("SESSION")
+        if(sess) headers.session = sess
     }
 
     let dataReq  = body ? {
@@ -92,7 +96,7 @@ const request = async (header:header_i, body?:Object):Promise<resp> => {
     }
 
     if(Session.isLogged() && response.status == 401){
-        Session.expireSessions()
+        // Session.expireSessions()
         Req.redirectTo('login', resp)
     }
 

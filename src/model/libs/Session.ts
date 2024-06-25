@@ -35,11 +35,10 @@ class Session {
 
     static getTempSessionValue(){
         const temp = Session.session_temp?.value
-        // Session.session_temp = undefined
         return temp
     }
 
-    static getSessionValue(){
+    static getSessionValue(){      
         return Session.session?.value
     }
 

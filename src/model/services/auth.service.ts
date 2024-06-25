@@ -15,6 +15,9 @@ export default {
             email:email,
             senha:senha
         })
+
+        console.log(resp);
+        
         if(resp.code != 200){
             return { status: false, message: resp.message ? resp.message : '' }
         }

@@ -1,5 +1,5 @@
 <template>
-    <Page>
+    <Page :code="code">
         <template v-slot:header_page>
             <div class="col-12 col-md-9">
                 <span class="h5 me-2"><Icon icon="IconCampanha" :scale="0.7" fill="blue"/> Campanhas</span>
@@ -132,19 +132,20 @@ import InputVue from '@/components/InputVue.vue';
 import LoadingSimple from '@/components/LoadingSimple.vue';
 import type { input_i } from '@/components/interfaces/InputI';
 import ListCampanhaWidget from '../widgets/campanha/ListCampanhaWidget.vue';
+import { App } from '@/model/Entidades/App';
 
-interface data {
-    input:input_i,
-    loading:boolean
-}
+
 export default defineComponent({
+
     components:{Page, Icon, InputVue, LoadingSimple, ListCampanhaWidget},
-    data():data{
+    data(){
         return {
+            code: App.havePagePermission("campanhas") ? 200 : 401,
             input:{
                 text:{
                     type:'search',
-                    placeholder:'Buscar Campanhas'
+                    placeholder:'Buscar Campanhas',
+                    value:''
                 },
                 slug:'search'
             },
@@ -160,8 +161,8 @@ export default defineComponent({
         },
         search(){
             this.loading = false
-            this.getData(this.input.text?.value)
-            console.log(this.input.text?.value);
+            this.getData(this.input.text.value)
+            console.log(this.input.text.value);
         },
     }
 })

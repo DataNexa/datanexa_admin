@@ -5,7 +5,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-1"></div>
-                        <div class="col-6 mt-2">Nome do Cliente</div>
+                        <div class="col-6 mt-2">{{ nomeClient }}</div>
                         <div class="col-5 text-end menu__user__top">
                             <div>
                                 <a href="#">
@@ -30,8 +30,8 @@
                                             </g>
                                         </g>
                                     </svg>
-                                    <div style="display: inline-block;" class="d-none d-md-inline-block">
-                                        <p style="text-decoration: none; color: black;">Nome do Usuário</p>
+                                    <div style="display: inline-block; min-width:100px" class="d-none d-md-inline-block">
+                                        <p class="text-start" style="text-decoration: none; color: black;">{{  nomeAccount  }}</p>
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu py-3">
@@ -50,12 +50,15 @@
 
 
 <script lang="ts">
+import { App } from '@/model/Entidades/App';
 import {defineComponent} from 'vue'
 
 export default defineComponent({
     data(){
         return {
-            show:false
+            show:false,
+            nomeAccount:App.getNomeAccount(),
+            nomeClient:(App.getUserJson() as any).client_nome
         }
     }
 })

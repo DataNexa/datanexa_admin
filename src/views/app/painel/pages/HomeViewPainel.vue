@@ -1,5 +1,5 @@
 <template>
-    <Page>
+    <Page :code="200">
         <CampanhaHomeWidget/>
         <CampanhaHomeWidget/>
     </Page>

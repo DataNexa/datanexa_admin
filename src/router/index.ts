@@ -9,11 +9,59 @@ const router = createRouter({
       name: 'home',
       component: HomeView
     },
+    /**
+     * ############# CAMPANHAS  ##########################
+     */
+
     {
       path:'/campanhas',
-      name:'Campanhas',
-      component: () => import('../views/app/painel/pages/CampanhasPage.vue')
+      name:'campanhas',
+      component: () => import('@/views/app/painel/pages/CampanhasPage.vue')
     },
+    
+     /**
+     * ############# PESQUISAS  ##########################
+     */
+
+    {
+      path:'/pesquisas',
+      name:'pesquisas',
+      component: () => import('@/views/app/painel/pages/PesquisasPage.vue')
+    },
+   
+    {
+      path:'/pesquisas/:id',
+      name:'pesquisas_selected',
+      component: () => import('@/views/app/painel/pages/pesquisas/PesquisaSelectedVue.vue'),
+      props:true
+    },
+
+    {
+      path:'/pesquisas/adicionar',
+      name:'pesquisas_acidionar',
+      component: () => import('@/views/app/painel/pages/pesquisas/AdicionarPesquisaVue.vue')
+    },
+
+    {
+      path:'/pesquisas/relatorio/:id',
+      name:'pesquisas_relatorio',
+      props:true,
+      component: () => import('@/views/app/painel/pages/pesquisas/StatsPesquisaVue.vue')
+    },
+
+    {
+      path:'/pesquisas/edit/:id',
+      name:'pesquisas_edit',
+      component: () => import('@/views/app/painel/pages/pesquisas/EditarPesquisaVue.vue')
+    },
+
+    {
+      path:'/pesquisas/responder/:id',
+      name:'pesquisas_responder',
+      component: () => import('@/views/app/painel/pages/pesquisas/ResponderPesquisaVue.vue')
+    },
+
+
     {
       path:'/test',
       component: TestViewVue

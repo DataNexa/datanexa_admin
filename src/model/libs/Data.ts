@@ -1,11 +1,14 @@
 class Data {
 
-    private data:Date
+    private data?:Date
     private brdate:string = ""
     private time:boolean = false
 
     constructor(data:string){
         this.data = new Date(data)
+        if(isNaN(this.data.getTime())){
+            this.data = undefined
+        }
     }
 
     public humanDate(){
@@ -13,7 +16,9 @@ class Data {
     }
 
     public toBr(time:boolean = false){
-        
+    
+        if(!this.data) return "indeterminado"
+
         if(this.brdate != "" && this.time == time){
             return this.brdate
         }
@@ -37,7 +42,7 @@ class Data {
     }
 
     public timestamp(){
-        return this.data.getTime()
+        return this.data?.getTime()
     }
 }
 

@@ -58,6 +58,7 @@ const router = createRouter({
     {
       path:'/pesquisas/responder/:id',
       name:'pesquisas_responder',
+      props:true,
       component: () => import('@/views/app/painel/pages/pesquisas/ResponderPesquisaVue.vue')
     },
 

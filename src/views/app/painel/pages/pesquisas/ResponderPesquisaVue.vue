@@ -206,8 +206,8 @@ export default defineComponent({
             this.buttons[0].loading = false
         },
         
-        async enviar(slug:string){
-            // console.log(this.formData.inputs[0].radio.value);
+        async enviar(){
+
             const options_questionario = []
             const options_perfil = []
             
@@ -231,9 +231,7 @@ export default defineComponent({
 
                 i++
             }
-
-            console.log(i, options_perfil, options_questionario);
-            
+ 
 
             const resp = await request({
                 method:'post',

@@ -52,6 +52,7 @@ const router = createRouter({
     {
       path:'/pesquisas/edit/:id',
       name:'pesquisas_edit',
+      props:true,
       component: () => import('@/views/app/painel/pages/pesquisas/EditarPesquisaVue.vue')
     },
 

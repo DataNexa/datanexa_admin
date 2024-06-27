@@ -5,7 +5,7 @@
                 <span class="h5 me-2">
                     <!-- <Icon icon="IconPesquisa" :scale="0.7" fill="blue"/>  -->
                 Pesquisa:</span>
-                <a href="#" v-if="!loading">
+                <a href="#" v-if="!loading && pesquisa.ativo > 0">
                     <router-link :to="`/pesquisas/relatorio/${id}`">
                         <Icon icon="IconEstatistica" :scale="0.7" fill="blue"/>
                     </router-link>
@@ -13,10 +13,14 @@
                 <a href="#">
                     <!-- <Icon icon="IconLogs" :scale="0.7" fill="blue"/>-->
                 </a>
-                <router-link :to="`/pesquisas/responder/${id}`" v-if="!loading">
+                <router-link :to="`/pesquisas/responder/${id}`"
+                    v-if="!loading && pesquisa.ativo > 0 && canResponse">
                     <button class="btn btn-outline-primary mx-2">Responder Pesquisa</button>
                 </router-link>
-                <button class="btn btn-outline-primary mx-2">Editar Pesquisa</button>
+                <router-link :to="`/pesquisas/edit/${id}`"
+                    v-if="!loading && pesquisa.ativo == 0 && canEdit">
+                    <button class="btn btn-outline-primary mx-2">Editar Pesquisa</button>
+                </router-link>
             </div>
         </template>
         <template v-slot:corpo_page>
@@ -30,11 +34,13 @@
 </template>
 
 <script lang="ts">
+
 import { defineComponent } from 'vue'
 import Page from '@/components/Page.vue';
 import Icon from '@/components/Icon.vue';
 import PesquisaSelectedWidget from '../../widgets/pesquisas/PesquisaSelectedWidget.vue';
 import LoadingSimple from '@/components/LoadingSimple.vue';
+import { App } from '@/model/Entidades/App';
 
 export default defineComponent({
     
@@ -42,7 +48,11 @@ export default defineComponent({
         return {
             loading:true,
             code:200,
-            pesquisa:{}
+            canEdit: App.userHasPermission('pesquisas@edit'),
+            canResponse: App.userHasPermission('pesquisas@responder'),
+            pesquisa:{
+                ativo:0
+            }
         }
     },
 

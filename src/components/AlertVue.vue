@@ -1,5 +1,5 @@
 <template>
-    <div style="z-index:999999999; position:fixed; width:90%; left: 5%;" v-if="alert.show" :class="`alert alert-${getType()} alert-dismissible fade show mt-3 shadow`" role="alert">
+    <div style="z-index:999999999; position:fixed; width:90%; left: 5%; top: 10%;" v-if="alert.show" :class="`alert alert-${getType()} alert-dismissible fade show mt-3 shadow`" role="alert">
         <h4 class="alert-heading" v-if="getType() == 'success'">Sucesso!</h4>
         <h4 class="alert-heading" v-if="getType() == 'warning'">Cuidado!</h4>
         <h4 class="alert-heading" v-if="getType() == 'danger'">Erro!</h4>
@@ -35,7 +35,7 @@ export default defineComponent({
         show() {
             setTimeout(() => {
                 this.alert.show = false
-            }, 5000);
+            }, 10000);
         }
     },
     watch:{

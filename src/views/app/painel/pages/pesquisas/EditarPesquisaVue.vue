@@ -23,7 +23,6 @@
                 <a href="#">
                     <!-- <Icon icon="IconLogs" :scale="0.7" fill="blue"/>-->
                 </a>
-                <button v-if="pesquisa.ativo == 0" class="btn btn-outline-primary mx-2">Publicar Pesquisa</button>
                 <button v-if="pesquisa.ativo == 1" class="btn btn-outline-dark mx-2">Colocar como Rascunho</button>
                 <button v-if="pesquisa.ativo == 0" @click="showModal = true" class="btn btn-outline-danger mx-2">Excluir Pesquisa</button>
                 <button v-if="pesquisa.ativo == 1" class="btn btn-outline-success mx-2">Finalizar Pesquisa</button>
@@ -107,6 +106,7 @@ export default defineComponent({
         // seleciona perguntas e opções da pesquisa
         this.getDataInfo()
         this.getDataPerfis()
+        this.getDataPergunta()
     },
 
     components:{ Page, Icon, InputVue, LoadingSimple, FormVue, Widget, AlertVue, ModalDynamic, PerguntaWidget},
@@ -343,15 +343,21 @@ export default defineComponent({
                 method:'post',
                 route:'pesquisas/update'
             }, {
+                id:this.id,
                 titulo:this.formData.inputs[0].text.value,
                 descricao:this.formData.inputs[1].text.value,
-                termino:this.formData.inputs[2].text.value,
+                termino:this.formData.inputs[2].text.value ? this.formData.inputs[2].text.value : '',
                 ativo:0
             })
 
             if(resp.code != 200){
                 this.alert.text = resp.message ? resp.message : 'Erro ao tentar salvar'
+                this.alert.type = 'danger'
                 this.alert.show = true               
+            } else {
+                this.alert.text = 'Dados da Pesquisa alterado com sucesso'
+                this.alert.type = 'success'
+                this.alert.show = true           
             }
 
             this.buttons[0].loading = false
@@ -375,6 +381,7 @@ export default defineComponent({
                 this.$router.push(`/pesquisas`);
             } else {
                 this.alert.text = resp.message ? resp.message : 'Erro ao tentar excluir'
+                this.alert.type = 'danger'
                 this.alert.show = true
             }
 
@@ -422,6 +429,7 @@ export default defineComponent({
                 this.showAddPergunta = false
             } else {
                 this.alert.text = req.message ? req.message : 'Erro ao tentar criar nova pergunta de questionário'
+                this.alert.type = 'danger'
                 this.alert.show = true
             }
 
@@ -450,6 +458,7 @@ export default defineComponent({
                 this.showAddPerfil = false
             } else {
                 this.alert.text = req.message ? req.message : 'Erro ao tentar criar nova pergunta de perfil'
+                this.alert.type = 'danger'
                 this.alert.show = true
             }
 

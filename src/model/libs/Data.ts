@@ -5,10 +5,12 @@ class Data {
     private endate:string = ""
     private time:boolean = false
 
-    constructor(data:string){
-        this.data = new Date(data)
-        if(isNaN(this.data.getTime())){
-            this.data = undefined
+    constructor(data:string|null|Date){
+        if(data) {
+            this.data = new Date(data)
+            if(isNaN(this.data.getTime())){
+                this.data = undefined
+            }
         }
     }
 
@@ -70,6 +72,10 @@ class Data {
 
     public timestamp(){
         return this.data?.getTime()
+    }
+
+    static agora(){
+        return new Data(new Date())
     }
 }
 

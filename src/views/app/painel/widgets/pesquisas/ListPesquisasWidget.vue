@@ -16,8 +16,7 @@
                     <hr>
                     <p class="text-dark"><small>Criado em: {{ transformData(pesquisa.createAt) }}</small><br>
                     <small>Finaliza em: {{ transformData(pesquisa.duration) }}</small></p>
-                    <p class="text-dark"><b>{{ pesquisa.quantPerguntas }} perguntas<br>
-                        {{ pesquisa.quantParticipantes }} participantes</b></p>
+                    <p class="text-dark"><b>{{ pesquisa.quantParticipantes }} participantes</b></p>
                     <p v-if="pesquisa.ativo == 1" class="text-primary">Ativa</p>
                     <p v-if="pesquisa.ativo == 0" class="text-dark"><i><small>Rascunho</small></i></p>
                     <p v-if="pesquisa.ativo == 2" class="text-success"><i><small>Finalizada</small></i></p>

@@ -26,7 +26,8 @@ export default defineComponent({
 
     created() {
         for(const op of this.options){
-            this.percents.push(Math.round((op.votos * this.total_votos) / 100))
+            let percent = Math.round((op.votos * 100) / this.total_votos)
+            this.percents.push(percent)
         }
     },
 

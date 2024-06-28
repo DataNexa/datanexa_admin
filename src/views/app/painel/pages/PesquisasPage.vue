@@ -1,4 +1,5 @@
 <template>
+    
     <Page :code="code">
         <template v-slot:header_page>
             <div class="col-12">

@@ -11,7 +11,7 @@
                     Relatorio de Pesquisa
                 </span> 
 
-                <button v-if="!loadingInfo" class="btn btn-outline-primary mx-2">Imprimir Relatório</button>
+                <button v-if="!loadingInfo" @click="imprimir" class="btn btn-outline-primary mx-2">Imprimir Relatório</button>
 
             </div>
 
@@ -25,8 +25,7 @@
                 <hr>
                 <p class="text-dark"><small>Criado em: {{ transformData(pesquisa.createAt) }}</small><br>
                 <small>Finaliza em: {{ transformData(pesquisa.duration) }}</small></p>
-                <p class="text-dark"><b>{{ pesquisa.quantPerguntas }} perguntas<br>
-                    {{ pesquisa.quantParticipantes }} participantes</b></p>
+                <p class="text-dark"><b>{{ pesquisa.quantParticipantes }} participantes</b></p>
                 <p v-if="pesquisa.ativo == 1" class="text-primary">Ativa</p>
                 <p v-if="pesquisa.ativo == 0" class="text-dark"><i><small>Rascunho</small></i></p>
                 <p v-if="pesquisa.ativo == 2" class="text-success"><i><small>Finalizada</small></i></p>
@@ -79,7 +78,7 @@ import Widget from '@/components/Widget.vue';
 import { App } from '@/model/Entidades/App';
 import Data from '@/model/libs/Data';
 import ChartWidget from '@/views/app/painel/widgets/pesquisas/ChartWidget.vue'
-import { request } from '@/model/libs/Request';
+import { request, download } from '@/model/libs/Request';
 import ChartPesquisaWidget from '@/views/app/painel/widgets/pesquisas/ChartPeguntasWidget.vue'
 
 interface chartDunut { titulo:string, type: 'bar' | 'line' | 'pie' | 'doughnut', data: { labels: string[], data: number[] } }
@@ -140,6 +139,18 @@ export default defineComponent({
             
         },
 
+        async imprimir(){
+
+            const req = await download({
+                method:'post',
+                route:'pesquisas/imprimir_relatorio'
+            }, {
+                id:this.id,
+                name:'Relatorio: '+this.pesquisa.titulo
+            })
+
+        },
+
         async getRelatorio(){
 
             this.loadingPerguntas = true
@@ -176,13 +187,13 @@ export default defineComponent({
                 }
                 this.charts.push(objPerfil)
             }
-
+   
             
             for(const q of Object.values(req.body['questionario'])){
                 
                 let questionario = q as any
 
-                const objPerfil:chartPerguntas = {
+                const objQuest:chartPerguntas = {
                     pergunta: questionario.pergunta,
                     options:questionario.options
                 }
@@ -198,7 +209,7 @@ export default defineComponent({
                     option.success = option.votos == maior
                 }
 
-                this.perguntas.push(objPerfil)
+                this.perguntas.push(objQuest)
             
             }
 

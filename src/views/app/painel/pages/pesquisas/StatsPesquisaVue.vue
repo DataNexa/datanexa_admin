@@ -11,21 +11,21 @@
                     Relatorio de Pesquisa
                 </span> 
 
-                <button v-if="!loadingInfo" class="btn btn-outline-primary mx-2">Imprimir Relatório</button>
+                <button v-if="!loadingInfo" @click="imprimir" class="btn btn-outline-primary mx-2">Imprimir Relatório</button>
 
             </div>
 
         </template>
 
         <template v-slot:corpo_page>
+            
             <Widget :loading="loadingInfo">
                 <h5 class="text-center">{{ pesquisa.titulo }}</h5>
                 <p class="text-center text-dark">{{ pesquisa.descricao }}</p>
                 <hr>
                 <p class="text-dark"><small>Criado em: {{ transformData(pesquisa.createAt) }}</small><br>
                 <small>Finaliza em: {{ transformData(pesquisa.duration) }}</small></p>
-                <p class="text-dark"><b>{{ pesquisa.quantPerguntas }} perguntas<br>
-                    {{ pesquisa.quantParticipantes }} participantes</b></p>
+                <p class="text-dark"><b>{{ pesquisa.quantParticipantes }} participantes</b></p>
                 <p v-if="pesquisa.ativo == 1" class="text-primary">Ativa</p>
                 <p v-if="pesquisa.ativo == 0" class="text-dark"><i><small>Rascunho</small></i></p>
                 <p v-if="pesquisa.ativo == 2" class="text-success"><i><small>Finalizada</small></i></p>
@@ -48,6 +48,21 @@
                 </div>
             </Widget>
 
+            <Widget :loading="loadingPerguntas" col="12">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 class="text-primary text-center pb-3">Questionário Aplicado</h3>
+                        </div>
+                        <ChartPesquisaWidget 
+                            v-for="pergunta of perguntas"
+                                :pergunta="pergunta.pergunta"
+                                :options="pergunta.options"
+                        />
+                    </div>
+                </div>
+            </Widget>
+
         </template>
 
     </Page>
@@ -63,15 +78,15 @@ import Widget from '@/components/Widget.vue';
 import { App } from '@/model/Entidades/App';
 import Data from '@/model/libs/Data';
 import ChartWidget from '@/views/app/painel/widgets/pesquisas/ChartWidget.vue'
-import { request } from '@/model/libs/Request';
-
+import { request, download } from '@/model/libs/Request';
+import ChartPesquisaWidget from '@/views/app/painel/widgets/pesquisas/ChartPeguntasWidget.vue'
 
 interface chartDunut { titulo:string, type: 'bar' | 'line' | 'pie' | 'doughnut', data: { labels: string[], data: number[] } }
-interface chartPerguntas { pergunta:string, options:{value:string, total_votos:number } }
+interface chartPerguntas { pergunta:string, options:{ valor:string, votos:number, success:boolean }[] }
 
 export default defineComponent({
     
-    components:{Page, Icon, Widget, ChartWidget},
+    components:{Page, Icon, Widget, ChartWidget,ChartPesquisaWidget},
 
     async created() {
         this.code = App.havePagePermission('pesquisas') && App.userHasPermission('pesquisas@relatorio') ? 200 : 401
@@ -106,13 +121,16 @@ export default defineComponent({
     },
     methods: {
         async getPesquisa(){
+
             this.loadingInfo = true
+            
             const req = await request({
                 method:'post',
                 route:'pesquisas/unique'
             },{
                 id:this.id
             })
+            
             if(req.code == 200){
                 this.pesquisa = req.body
             }
@@ -121,8 +139,22 @@ export default defineComponent({
             
         },
 
+        async imprimir(){
+
+            const req = await download({
+                method:'post',
+                route:'pesquisas/imprimir_relatorio'
+            }, {
+                id:this.id,
+                name:'Relatorio: '+this.pesquisa.titulo
+            })
+
+        },
+
         async getRelatorio(){
+
             this.loadingPerguntas = true
+            
             const req = await request({
                 method:'post',
                 route:'pesquisas/relatorio'
@@ -155,7 +187,34 @@ export default defineComponent({
                 }
                 this.charts.push(objPerfil)
             }
+   
+            
+            for(const q of Object.values(req.body['questionario'])){
+                
+                let questionario = q as any
+
+                const objQuest:chartPerguntas = {
+                    pergunta: questionario.pergunta,
+                    options:questionario.options
+                }
+
+                let maior = 0
+                for(const option of questionario.options){
+                    if(option.votos > maior){
+                        maior = option.votos
+                    }
+                }
+
+                for(const option of questionario.options){
+                    option.success = option.votos == maior
+                }
+
+                this.perguntas.push(objQuest)
+            
+            }
+
             this.loadingPerguntas = false
+            
         },
 
         transformData(data:string){

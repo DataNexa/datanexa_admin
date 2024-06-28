@@ -1,4 +1,5 @@
 <template>
+    
     <Page :code="code">
         <template v-slot:header_page>
             <div class="col-12">
@@ -11,7 +12,9 @@
                 <a href="#">
                     <!-- <Icon icon="IconLogs" :scale="0.7" fill="blue"/>-->
                 </a>
-                <button class="btn btn-outline-primary mx-2">Nova Pesquisa</button>
+                <router-link v-if="canAdd" to="/pesquisas/adicionar">
+                    <button class="btn btn-outline-primary mx-2">Nova Pesquisa</button>
+                </router-link>
             </div>
             
         </template>
@@ -46,6 +49,7 @@ export default defineComponent({
     data(){
         return {
             code:App.havePagePermission("pesquisas") ? 200 : 401,
+            canAdd:App.userHasPermission('pesquisas@create'),
             loading:false
         }
     },

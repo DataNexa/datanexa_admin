@@ -33,7 +33,8 @@ class Req {
 interface header_i {
     method:string,
     route:string,
-    sess_type?:string
+    sess_type?:string,
+    content_type?:string
 }
 
 interface body_res {
@@ -59,10 +60,55 @@ const logoff = async () => {
     Session.expireSessions()
 }
 
+const download = async (header:header_i, body?:any) => {
+
+    const headers:{'Content-Type':string, session?:string} = {
+        'Content-Type':header.content_type ? header.content_type : 'application/json'
+    }
+
+    if(header.sess_type){
+        headers.session = Session.getSessionBy(header.sess_type)
+    } else {
+        let sess = Session.getSessionBy("SESSION")
+        if(sess) headers.session = sess
+    }
+
+    let dataReq  = body ? {
+        method:header.method,
+        headers:headers,
+        body: JSON.stringify(body)
+    } : {
+        method:header.method,
+        headers:headers
+    }
+
+    const response = await fetch(import.meta.env.VITE_API_URL+header.route, dataReq)
+
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+
+    const contentDisposition = response.headers.get('Content-Disposition');
+    let filename = 'download.pdf'; 
+
+    if (contentDisposition && contentDisposition.includes('filename=')) {
+        filename = contentDisposition.split('filename=')[1].trim();
+    }
+    
+    a.download = filename
+    document.body.appendChild(a)
+
+    a.click();
+    a.remove();
+
+}   
+
 const request = async (header:header_i, body?:any):Promise<resp> => {
 
     const headers:{'Content-Type':string, session?:string} = {
-        'Content-Type':'application/json'
+        'Content-Type':header.content_type ? header.content_type : 'application/json'
     }
 
     if(header.sess_type){
@@ -105,4 +151,4 @@ const request = async (header:header_i, body?:any):Promise<resp> => {
 }
 
 
-export { request, setRedirection, logoff }
+export { request, setRedirection, logoff, download }

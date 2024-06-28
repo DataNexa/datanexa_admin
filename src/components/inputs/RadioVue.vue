@@ -1,5 +1,5 @@
 <template>
-    <label class="form-label" v-if="input.radio?.label">{{ input.radio.label }} <span><small><i>{{ input.required && asterico ? '(*)' : '' }}</i></small></span></label>
+    <label class="form-label mt-4" v-if="input.radio?.label">{{ input.radio.label }} <span><small><i>{{ input.required && asterico ? '(*)' : '' }}</i></small></span></label>
     <p class="text-danger m-0 p-0" v-if="input.showError"><small><i>{{ input.messageError ? input.messageError : 'Você precisa escolher uma opção' }}</i></small></p>
     <p class="m-0 p-0" v-if="!input.showError && input.message"><small><i>{{ input.message }}</i></small></p>
     <div v-if="input.radio" class="form-check" v-for="option in input.radio.options">

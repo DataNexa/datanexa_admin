@@ -38,7 +38,7 @@ import Icon from '@/components/Icon.vue';
 import InputVue from '@/components/InputVue.vue';
 import LoadingSimple from '@/components/LoadingSimple.vue';
 
-import ListPesquisasWidget from '../widgets/pesquisas/ListPesquisasWidget.vue';
+import ListPesquisasWidget from '@/views/app/painel/widgets/pesquisas/ListPesquisasWidget.vue';
 import { App } from '@/model/Entidades/App';
 
 export default defineComponent({

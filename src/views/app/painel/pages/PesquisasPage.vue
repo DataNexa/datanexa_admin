@@ -4,7 +4,7 @@
         <template v-slot:header_page>
             <div class="col-12">
                 <span class="h5 me-2">
-                    <!-- <Icon icon="IconPesquisa" :scale="0.7" fill="blue"/>  -->
+                    <Icon icon="IconPesquisas" :scale="0.7" fill="blue"/>
                 Pesquisas</span>
                 <a href="#">
                     <!-- <Icon icon="IconEstatistica" :scale="0.7" fill="blue"/> -->

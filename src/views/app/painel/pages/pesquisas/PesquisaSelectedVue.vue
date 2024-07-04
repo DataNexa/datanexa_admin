@@ -14,8 +14,8 @@
         <template v-slot:header_page>
             <div class="col-12" v-if="!loading">
                 <span class="h5 me-2">
-                    <!-- <Icon icon="IconPesquisa" :scale="0.7" fill="blue"/>  -->
-                Pesquisa:</span>
+                    <Icon icon="IconPesquisas   " :scale="0.7" fill="blue"/>
+                Pesquisa</span>
                 <a href="#" v-if="!loading && pesquisa.ativo > 0">
                     <router-link :to="`/pesquisas/relatorio/${id}`">
                         <Icon icon="IconEstatistica" :scale="0.7" fill="blue"/>

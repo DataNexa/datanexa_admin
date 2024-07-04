@@ -63,6 +63,13 @@ const router = createRouter({
       component: () => import('@/views/app/painel/pages/pesquisas/ResponderPesquisaVue.vue')
     },
 
+    {
+      path:'/monitoramento',
+      name:'monitoramento',
+      props:true,
+      component: () => import('@/views/app/painel/pages/MonitoramentoPage.vue')
+    },
+
 
     {
       path:'/test',

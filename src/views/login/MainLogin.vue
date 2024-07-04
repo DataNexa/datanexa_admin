@@ -48,7 +48,7 @@ export default defineComponent({
     data() {
         return {
             percent:1,
-            loading:false,
+            loading:true,
             component:"AuthMain",
             email:'',
             checkCode:false
@@ -58,20 +58,23 @@ export default defineComponent({
 
         async checkToken(){
 
+            this.loading = true
             const token = getToken()
-
+            console.log(token);
+            
             if(token == null){
                 this.component = "AuthMain"
+                this.loading = false
                 return 
             }
 
             const accRepo = await authService.getAccountData()
-
+            
             if(accRepo.status && accRepo.body){
                 const acc = new Account(accRepo.body.nome, accRepo.body.email)
                 App.setAccount(acc)
             }
-
+            this.loading = false
             this.component = "OptionsUser"
         },
 

@@ -77,7 +77,7 @@ import Icon from '@/components/Icon.vue';
 import Widget from '@/components/Widget.vue';
 import { App } from '@/model/Entidades/App';
 import Data from '@/model/libs/Data';
-import ChartWidget from '@/views/app/painel/widgets/pesquisas/ChartWidget.vue'
+import ChartWidget from '@/views/app/painel/widgets/_includes/ChartWidget.vue'
 import { request, download } from '@/model/libs/Request';
 import ChartPesquisaWidget from '@/views/app/painel/widgets/pesquisas/ChartPeguntasWidget.vue'
 

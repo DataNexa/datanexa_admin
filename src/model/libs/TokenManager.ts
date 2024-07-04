@@ -5,7 +5,7 @@ class TokenManager {
 
     private constructor(){
         this.token = TokenManager.getCookie('token')
-
+        //console.log(this.token);
     }
 
     static getTokenManager(){

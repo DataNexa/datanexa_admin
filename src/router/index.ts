@@ -66,10 +66,34 @@ const router = createRouter({
     {
       path:'/monitoramento',
       name:'monitoramento',
-      props:true,
       component: () => import('@/views/app/painel/pages/MonitoramentoPage.vue')
     },
 
+    {
+      path:'/monitoramento/:id',
+      name:'monitoramento_selected',
+      props:true,
+      component: () => import('@/views/app/painel/pages/monitoramento/MonitoramentoSelected.vue')
+    },
+
+    {
+      path:'/monitoramento/editarFila',
+      name:'monitoramento_editar_fila',
+      component: () => import('@/views/app/painel/pages/monitoramento/EditarFila.vue')
+    },
+
+    {
+      path:'/monitoramento/adicionar',
+      name:'monitoramento_adicionar',
+      component: () => import('@/views/app/painel/pages/monitoramento/AdicionarMonitoramento.vue')
+    },
+
+    {
+      path:'/monitoramento/editar/:id',
+      name:'monitoramento_editar',
+      props:true,
+      component: () => import('@/views/app/painel/pages/monitoramento/EditarMonitoramento.vue')
+    },
 
     {
       path:'/test',

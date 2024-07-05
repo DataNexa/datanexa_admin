@@ -11,7 +11,9 @@
                 <a href="#">
                     <!-- <Icon icon="IconLogs" :scale="0.7" fill="blue"/>-->
                 </a>
-                <button class="btn btn-outline-primary mx-2">Novo Monitoramento</button>
+                <router-link to="/monitoramento/adicionar">
+                    <button class="btn btn-outline-primary mx-2">Novo Monitoramento</button>
+                </router-link>
             </div>
             
         </template>
@@ -26,9 +28,9 @@
             </div>
             <div class="container-fluid py-3" v-if="!loading">
                 <div class="row">
-                    <div class="col-12 col-md-11">
+                    <div :class="`col-12 col-md-${!showTasks?10:9} col-lg-${!showTasks?11:9}`">
                         <div class="row">
-                            <Widget v-for="m of monitoramentos"  :loading="false" col="12" md="6" lg="4">
+                            <Widget v-for="m,k of monitoramentos"  :loading="false" col="12" md="6" lg="4" :key="k">
                                 <h5>{{ m.titulo }}</h5>
                                 <p>{{ m.descricao }}</p>
                                 <hr>
@@ -36,11 +38,11 @@
                                     <div class="col-12 col-md-6">
                                         <p><i><small>criado em: {{ tranformData(m.creatat) }}</small></i></p>
                                         <div class="form-check form-switch py-2">
-                                            <input class="form-check-input" type="checkbox" role="switch" id="ativoCheckSwitch" :checked="m.ativo == 1 ? 'true' : 'false'">
+                                            <input @change="() => { changeAtivo(k) }" class="form-check-input" type="checkbox" role="switch" id="ativoCheckSwitch" :checked="m.ativo == 1 ? true : false">
                                             <label class="form-check-label" for="ativoCheckSwitch">{{ m.ativo == 1 ? 'Ativo' : 'Desativado' }}</label>
                                         </div>
                                         <div class="form-check form-switch py-2">
-                                            <input class="form-check-input" type="checkbox" role="switch" id="repeatCheckSwitch" :checked="m.repetir == 1 ? 'true' : 'false'">
+                                            <input @change="() => { changeRepeat(k) }" class="form-check-input" type="checkbox" role="switch" id="repeatCheckSwitch" :checked="m.repetir == 1 ? true : false">
                                             <label class="form-check-label" for="repeatCheckSwitch">Repetição {{ m.repetir == 1 ? 'Ativa' : 'Desativada' }}</label>
                                         </div>
                                         <router-link :to="`monitoramento/${m.id}`">
@@ -65,7 +67,7 @@
                             </Widget>
                         </div>
                     </div>
-                    <div class="col-12 col-md-1" v-if="!showTasks">
+                    <div :class="`col-12 col-md-2 col-lg-1`" v-if="!showTasks">
                         <Widget :loading="carregandoTasks" col="12">
                             <div class="row">
                                 <div class="col-12 py-2">
@@ -76,6 +78,38 @@
                                 </div>
                                 <div class="col-12" v-if="taskStatus.totalAwait > 0">
                                     <h5> <Icon icon="IconClock" :scale="0.5" /> {{ taskStatus.totalAwait }} </h5>
+                                </div>
+                                <div class="col-12" v-if="taskStatus.totalFinish > 0">
+                                    <h5> <IconFinish /> {{ taskStatus.totalFinish }} </h5>
+                                </div>
+                            </div>
+                        </Widget>
+                    </div>
+                    <div :class="`col-12 col-md-3`" v-if="showTasks">
+                        <Widget :loading="carregandoTasks" col="12">
+                            <div class="row">
+                                
+                                <div class="col-6 py-2">
+                                    <router-link to="/monitoramento/editarFila">
+                                        <button class="btn btn-sm btn-outline-primary d-block mr-auto">editar fila</button>
+                                    </router-link>
+                                </div>
+
+                                <div class="col-6 py-2">
+                                    <a href="#" @click="showTasks = false" class="text-end d-block"><span><IconRight /></span><span >Fechar</span></a>
+                                </div>
+                                
+                                <div class="col-12" v-for="task of tasks">
+                                    <div class="row border-top py-2">
+                                        <div class="col-10">
+                                            <h5>{{ task.titulo }}</h5>
+                                        </div>
+                                        <div class="col-2">
+                                            <Icon icon="IconClock" :scale="0.5" v-if="task.task_status == 1" />
+                                            <IconGear v-if="task.task_status == 2"/>
+                                            <IconFinish v-if="task.task_status == 3"/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </Widget>
@@ -101,6 +135,8 @@ import { request } from '@/model/libs/Request';
 import Data from '@/model/libs/Data';
 import IconGear from '@/components/icons/IconGear.vue';
 import IconLeft from '@/components/icons/IconLeft.vue'
+import IconRight from '@/components/icons/IconRight.vue'
+import IconFinish from '@/components/icons/IconFinish.vue'
 
 export default defineComponent({
 
@@ -109,7 +145,7 @@ export default defineComponent({
         this.loadTasks()
     },
 
-    components:{Page, Icon, InputVue, LoadingSimple, ListPesquisasWidget, Widget, ChartWidget, IconGear, IconLeft},
+    components:{ Page, Icon, InputVue, LoadingSimple, ListPesquisasWidget, Widget, ChartWidget, IconGear, IconLeft, IconRight, IconFinish },
     
     data(){
         return {
@@ -132,7 +168,9 @@ export default defineComponent({
                 neutros:number
             }>,
             tasks:[] as Array<{
-
+                titulo:string,
+                prioridade:number,
+                task_status:number
             }>,
             taskStatus:{
                 totalAwait:0,
@@ -141,7 +179,9 @@ export default defineComponent({
             }
         }
     },
+
     methods:{
+
         async loadData(){
             const resp = await request({
                 method:'post',
@@ -183,7 +223,56 @@ export default defineComponent({
 
         tranformData(data:string){
             return  (new Data(data)).toBr()
+        },
+
+        async changeAtivo(key:number){
+            
+            const id = this.monitoramentos[key].id
+            let stat = !(this.monitoramentos[key].ativo == 1)
+
+            const response = await request({
+                method:'post',
+                route:'monitoramento/ativar'
+            }, {
+                status:stat,
+                id:id      
+            })
+
+            if(response.code == 200){
+                this.monitoramentos[key].ativo = stat ? 1 : 0
+                if(this.monitoramentos[key].ativo == 0){
+                    this.monitoramentos[key].repetir = 0
+                }
+            }
+
+        },
+
+        async changeRepeat(key:number){
+            
+            if(this.monitoramentos[key].ativo == 0){
+                this.monitoramentos[key].repetir = 0
+                return
+            }
+
+            const id = this.monitoramentos[key].id
+            let stat = !(this.monitoramentos[key].repetir == 1)
+
+            const response = await request({
+                method:'post',
+                route:'monitoramento/repetir'
+            }, {
+                status:stat,
+                id:id      
+            })
+
+            if(response.code == 200){
+                console.log(stat);
+                
+                this.monitoramentos[key].repetir = stat ? 1 : 0
+            }
+
         }
+
     }
 })
 </script>

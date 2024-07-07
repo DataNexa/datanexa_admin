@@ -54,7 +54,7 @@
 <script lang="ts">
 
 import {defineComponent} from 'vue'
-import IconStaus from '../_includes/IconStaus.vue';
+import IconStaus from '@/views/app/painel/widgets/_includes/IconStaus.vue';
 import ModalDynamic from '@/components/ModalDynamic.vue';
 import Data from "@/model/libs/Data"
 import Icon from '@/components/Icon.vue';
@@ -127,11 +127,13 @@ export default defineComponent({
             let exp2 = expr.timestamp()
             let hoje = Date.now()
 
-            let x = 100 - Math.round((100 * (exp2 - hoje)) / (exp2 - crea))
-            x = x > 100 ? 100 : x
-            this.colorPercent = x > 30 ? (x > 80 ? "red":"blue") : "green"
-            this.percent = `${x}%`
-
+            if(exp2 && crea){
+                let x = 100 - Math.round((100 * (exp2 - hoje)) / (exp2 - crea))
+                x = x > 100 ? 100 : x
+                this.colorPercent = x > 30 ? (x > 80 ? "red":"blue") : "green"
+                this.percent = `${x}%`
+            }
+            
         }
 
         if(this.card.modificadoEm){

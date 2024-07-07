@@ -52,7 +52,7 @@ import InputVue from '@/components/InputVue.vue';
 import LoadingSimple from '@/components/LoadingSimple.vue';
 import FormVue from '@/components/FormVue.vue';
 import Widget from '@/components/Widget.vue';
-import PesquisaSelectedWidget from '../../widgets/pesquisas/PesquisaSelectedWidget.vue';
+import PesquisaSelectedWidget from '@/views/app/painel/widgets/pesquisas/PesquisaSelectedWidget.vue';
 import AlertVue from '@/components/AlertVue.vue';
 
 import { App } from '@/model/Entidades/App';

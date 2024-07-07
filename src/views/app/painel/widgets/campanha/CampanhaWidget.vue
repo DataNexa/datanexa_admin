@@ -47,8 +47,8 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
 import Widget from '@/components/Widget.vue';
-import CardCampanha from './CardCampanhaWidget.vue';
-import IconStaus from '../_includes/IconStaus.vue';
+import CardCampanha from '@/views/app/painel/widgets/campanha/CardCampanhaWidget.vue';
+import IconStaus from '@/views/app/painel/widgets/_includes/IconStaus.vue';
 import Icon from '@/components/Icon.vue';
 interface card_list {
     id:number,

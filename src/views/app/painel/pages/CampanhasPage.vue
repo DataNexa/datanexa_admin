@@ -130,8 +130,7 @@ import Page from '@/components/Page.vue';
 import Icon from '@/components/Icon.vue';
 import InputVue from '@/components/InputVue.vue';
 import LoadingSimple from '@/components/LoadingSimple.vue';
-import type { input_i } from '@/components/interfaces/InputI';
-import ListCampanhaWidget from '../widgets/campanha/ListCampanhaWidget.vue';
+import ListCampanhaWidget from '@/views/app/painel/widgets/campanha/ListCampanhaWidget.vue';
 import { App } from '@/model/Entidades/App';
 
 

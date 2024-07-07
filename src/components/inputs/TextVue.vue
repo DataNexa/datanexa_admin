@@ -6,7 +6,7 @@
         <span v-if="input.text?.type == 'password'" @click="changeType" class="input-group-text" style="cursor:pointer;" v-html="see ? '&#128515;' : '&#128518;'"></span>
     </div>
     <p class="text-danger pb-3 my-0" v-if="input.showError"><small><i>{{ (input.messageError ? input.messageError : "campo inválido") }}</i></small></p>
-    <p class="text-gray pb-3 my-0" v-if="!input.showError && input.message && !input.validate"><small><i>{{ input.message }}</i></small></p>
+    <p class="text-gray pb-3 my-0" v-if="input.message && !input.validate"><small><i v-html="input.message"></i></small></p>
 </template>
 
 <script lang="ts">
@@ -31,7 +31,9 @@ export default defineComponent({
     },
     created() {
         this.input.validate = !(this.input.text?.regex || this.input.required)
-
+        if(this.value){
+            this.isValid()
+        }
     },
     props:{
         input:{

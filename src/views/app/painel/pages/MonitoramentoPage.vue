@@ -128,7 +128,7 @@ import Icon from '@/components/Icon.vue';
 import InputVue from '@/components/InputVue.vue';
 import LoadingSimple from '@/components/LoadingSimple.vue';
 import Widget from '@/components/Widget.vue';
-import ListPesquisasWidget from '../widgets/pesquisas/ListPesquisasWidget.vue';
+import ListPesquisasWidget from '@/views/app/painel/widgets/pesquisas/ListPesquisasWidget.vue';
 import { App } from '@/model/Entidades/App';
 import ChartWidget from '@/views/app/painel/widgets/_includes/ChartWidget.vue'
 import { request } from '@/model/libs/Request';

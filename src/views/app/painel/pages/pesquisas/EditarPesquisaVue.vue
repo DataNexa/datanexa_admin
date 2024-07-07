@@ -97,7 +97,7 @@ import { App } from '@/model/Entidades/App';
 import { request } from '@/model/libs/Request';
 import ModalDynamic from '@/components/ModalDynamic.vue';
 import Data from '@/model/libs/Data';
-import PerguntaWidget from '../../widgets/pesquisas/PerguntaWidget.vue';
+import PerguntaWidget from '@/views/app/painel/widgets/pesquisas/PerguntaWidget.vue';
 
 export default defineComponent({
 

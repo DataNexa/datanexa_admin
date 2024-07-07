@@ -1,7 +1,7 @@
 <script lang="ts">
-import MainPainel from "./painel/MainPainel.vue";
+import MainPainel from "@/views/app/painel/MainPainel.vue";
 import {defineComponent} from "vue"
-import MainAdmin from "./admin/MainAdmin.vue";
+import MainAdmin from "@/views/app/admin/MainAdmin.vue";
 import { App, system_type } from "@/model/Entidades/App";
 
 export default defineComponent({

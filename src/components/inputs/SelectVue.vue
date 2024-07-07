@@ -12,6 +12,11 @@ import type { input_i } from '@/components/interfaces/InputI';
 import {defineComponent} from 'vue'
 
 export default defineComponent({
+    created() {
+        if(this.input.select && this.input.select.value){
+            this.value = this.input.select.value
+        }
+    },
     props:{
         input:{
             type:Object as () => input_i,

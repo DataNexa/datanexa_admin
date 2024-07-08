@@ -116,9 +116,6 @@ export default defineComponent({
         
         async criar(){
 
-            console.log(this.formData.inputs[2].text.value);
-            
-
             const resp = await request({
                 method:'post',
                 route:'pesquisas/create'

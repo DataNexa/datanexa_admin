@@ -2,21 +2,20 @@
 import {defineComponent} from 'vue'
 import CampanhaWidgetVue from '@/views/app/painel/widgets/campanha/CampanhaWidget.vue'
 
-interface card_list {
-    id:number,
-    name:string,
-    state:string,
-    description:string,
-    date?:string,
-    show?:boolean,
-    criadoEm:string,
-    modificadoEm?:string
+interface tarefas {
+    tarefa_id:number,
+    tarefa:string,
+    descricao:string,
+    status:number,
+    createAt:string,
+    dataLimite:string
 }
 
 interface campanha_i {
-    title:string,
-    description:string,
-    cards:card_list[]
+    id:number,
+    nome:string,
+    descricao:string,
+    tarefas:tarefas[]
 }
 
 export default defineComponent({
@@ -33,11 +32,13 @@ export default defineComponent({
 <template>
     <CampanhaWidgetVue 
         v-for="campanha,k in list" 
+        @openInfo="$emit('openInfo', campanha.id)"
+        @createCard="$emit('createCard', campanha.id)"
+        :id="campanha.id"
         :index="k"
-        :title="campanha.title"
-        :description="campanha.description"
-        :cards="campanha.cards"
-    
+        :title="campanha.nome"
+        :description="campanha.descricao"
+        :cards="campanha.tarefas"
     />
 </template>
 

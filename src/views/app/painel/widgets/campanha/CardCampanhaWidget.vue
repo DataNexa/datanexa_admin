@@ -2,24 +2,23 @@
     
     <ModalDynamic v-if="openModal && !canNotChangeState" @close_modal="openModal=false" >
         <span><IconStaus float="left" :color="colorIcon" :size="20" :key="keyIcon"/> 
-            <b>{{ card.state.charAt(0).toUpperCase() + card.state.slice(1) }}. </b>
-            <i v-if="card.date"><br><small>cartão {{ card.state == 'ativo' ? 'expira' : 'expirava' }} em {{ expiraEm }}</small></i>
+            <b>{{ status[card.status].charAt(0).toUpperCase() + status[card.status].slice(1) }}. </b>
+            <i v-if="card.dataLimite"><br><small>cartão {{ status[card.status] == 'ativo' ? 'expira' : 'expirava' }} em {{ expiraEm }}</small></i>
         </span>
-        <span v-if="card.modificadoEm"><i>
-            <small>estatus modificado em {{ modifiEm }}</small></i></span>
-        <h5>{{ card.name }}</h5>
-        <p>{{ card.description }}</p>
-        <div class="row" v-if="card.state=='ativo'">
+        
+        <h5>{{ card.tarefa }}</h5>
+        <p>{{ card.descricao }}</p>
+        <div class="row" v-if="status[card.status]=='ativo'">
             <div class="col-6">
-                <button class="btn btn-sm btn-outline-danger" v-on:click="changeState('cancelado')">Cancelar Cartão</button>
+                <button class="btn btn-sm btn-outline-danger" v-on:click="changeState(3)">Cancelar Cartão</button>
             </div>
             <div class="col-6">
-                <button class="btn btn-success d-block ms-auto" v-on:click="changeState('finalizado')">Feito</button>
+                <button class="btn btn-success d-block ms-auto" v-on:click="changeState(2)">Feito</button>
             </div>
         </div>
         <div class="row" v-else>
             <div class="col-12">
-                <button class="btn btn-info d-block ms-auto" v-on:click="changeState('ativo')">Reativar Cartão</button>
+                <button class="btn btn-info d-block ms-auto" v-on:click="changeState(1)">Reativar Cartão</button>
             </div>
         </div>
     </ModalDynamic>
@@ -27,13 +26,13 @@
     <div v-if="card.show" v-on:click="openModal=true" class="cardCampanha container-fluid bg-black-super-light border my-2 p-2">
         <div class="row">
             <div class="col-10">
-                <p>{{ card.name }}</p>
+                <p>{{ card.tarefa }}</p>
             </div>
             <div class="col-2 pt-1">
                 <IconStaus float="right" :color="colorIcon" :size="15" :key="keyIcon"/>
             </div>
         </div>
-        <div class="row" v-if="card.date">
+        <div class="row" v-if="card.dataLimite">
             <div class="col-12">
                 <small>
                     <Icon icon="IconClock" :scale="0.3"/>
@@ -61,12 +60,12 @@ import Icon from '@/components/Icon.vue';
 export default defineComponent({
 
     methods:{
-        changeState(state:string){
+        changeState(status:number){
 
-            let oldstate = this.card.state
-            this.card.state = state
+            let oldstate = this.card.status
+            this.card.status = status
 
-            if(state != oldstate){
+            if(status != oldstate){
                 this.card.show = false
                 this.$emit('recount_cards')
             }
@@ -75,13 +74,13 @@ export default defineComponent({
             this.keyIcon++
         },
         setColor(){
-            if(!['ativo', 'finalizado', 'cancelado'].includes(this.card.state)){
+            if(!['ativo', 'finalizado', 'cancelado'].includes(this.status[this.card.status])){
                 return
             }
-            switch (this.card.state) {
-                case       "ativo"  : this.colorIcon = "blue" ; break;
-                case    "cancelado" : this.colorIcon = "red"  ; break;
-                case   "finalizado" : this.colorIcon = "green"; break;
+            switch (this.card.status) {
+                case   1 : this.colorIcon = "blue" ; break;
+                case   3 : this.colorIcon = "red"  ; break;
+                case   2 : this.colorIcon = "green"; break;
             }
         }
     },
@@ -89,14 +88,13 @@ export default defineComponent({
     props:{
         card:{
             type: Object as () => {
-                id:number,
-                name:string, 
-                description:string, 
-                state:string,
-                date?:string,
-                show?:boolean,
-                modificadoEm?:string,
-                criadoEm:string
+                tarefa_id:number,
+                tarefa:string,
+                descricao:string,
+                status:number,
+                createAt:string,
+                dataLimite:string,
+                show?:boolean
             },
             required:true
         },
@@ -105,6 +103,7 @@ export default defineComponent({
 
     data(){
         return {
+            status:['inativo', 'ativo', 'finalizado', 'cancelado'],
             keyIcon:1,
             percent: "0%",
             openModal:false,
@@ -118,28 +117,25 @@ export default defineComponent({
         
         this.setColor()
         
-        if(this.card.date){
+        if(this.card.dataLimite){
 
-            let expr = new Data(this.card.date)
+            let expr = new Data(this.card.dataLimite)
             this.expiraEm = expr.toBr()
 
-            let crea = new Data(this.card.criadoEm).timestamp()
+            let crea = new Data(this.card.createAt).timestamp()
             let exp2 = expr.timestamp()
             let hoje = Date.now()
 
             if(exp2 && crea){
                 let x = 100 - Math.round((100 * (exp2 - hoje)) / (exp2 - crea))
                 x = x > 100 ? 100 : x
-                this.colorPercent = x > 30 ? (x > 80 ? "red":"blue") : "green"
+                this.colorPercent = x > 30 ? (x > 60 ? (x > 80 ? "red" : "yellow"):"blue") : "green"
                 this.percent = `${x}%`
             }
             
         }
 
-        if(this.card.modificadoEm){
-            let modfy = new Data(this.card.modificadoEm)
-            this.modifiEm = modfy.toBr()
-        }
+
     },
     components:{IconStaus, ModalDynamic, Icon}
 })
@@ -149,10 +145,11 @@ export default defineComponent({
 <style scoped>
 .cardCampanha {
     cursor:pointer;
+    background-color: white;
 }
 
 .cardCampanha:hover {
-    background-color: white;
+    background-color:aliceblue;
 }
 
 small {

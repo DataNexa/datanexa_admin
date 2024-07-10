@@ -9,6 +9,23 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import FormVue from '@/components/FormVue.vue'
+import { request } from '@/model/libs/Request';
+
+interface tarefas {
+    tarefa_id:number,
+    tarefa:string,
+    descricao:string,
+    status:number,
+    createAt:string,
+    dataLimite:string
+}
+
+interface campanha_i {
+    id:number,
+    nome:string,
+    descricao:string,
+    tarefas:tarefas[]
+}
 
 export default defineComponent({
 
@@ -25,9 +42,9 @@ export default defineComponent({
                 inputs:[
                     {
                         text:{
-                            label:'Título',
+                            label:'nome',
                             type:'text',
-                            placeholder:'Título da Pesquisa',
+                            placeholder:'Nome da Campanha',
                             value:''
                         },
                         messageError:'Este campo não pode estar vazio',
@@ -37,7 +54,7 @@ export default defineComponent({
                         text:{
                             label:'Descrição',
                             type:'text',
-                            placeholder:'Descrição da Pesquisa',
+                            placeholder:'Descrição da Campanha',
                             value:''
                         },
                         messageError:'Este campo não pode estar vazio',
@@ -59,9 +76,37 @@ export default defineComponent({
     },
 
     methods: {
-        salvar(){
+        async salvar(){
             // salvar e enviar evento de salvou
-            // this.$emit('createCampanha', campanha)
+
+            let nome = this.formData.inputs[0].text.value
+            let desc = this.formData.inputs[1].text.value
+
+            const req = await request({
+                method:'post',
+                route:'campanhas/create'
+            }, {
+                nome:nome,
+                descricao:desc,
+                ativo:1
+            })
+
+            if(req.code == 200){
+
+                let campanha:campanha_i = {
+                    id:parseInt(req.body),
+                    nome:nome,
+                    descricao:desc,
+                    tarefas:[]
+                }
+
+                this.$emit('createCampanha', campanha)
+
+            } else {
+                // TODO : mostrar erro alert
+                this.buttons[0].loading = false
+            }
+            
         }
     },
 })

@@ -2,9 +2,11 @@
     
     <ModalDynamic v-if="openModal" @close_modal="openModal=false">
         <component :is="component"
-            @createCampanha=""
-            @createCard=""
+            @createCampanha="onCreateCampanha"
+            @createCard="onCreateCard"
             @changeTo="onChangeTo"
+            @reload="list"
+            @close="openModal=false"
             :id="campanhaId"
         ></component>
     </ModalDynamic>
@@ -39,7 +41,8 @@
             </div>
             <div class="container-fluid" v-if="!loading">
                 <div class="row">
-                    <ListCampanhaWidget
+                    <ListCampanhaWidget 
+                    :key="update"
                     @openInfo="(id) => {
                         campanhaId = id 
                         component  = 'InfoCampanha'
@@ -98,9 +101,10 @@ export default defineComponent({
 
     data(){
         return {
+            update:1,
             code: App.havePagePermission("campanhas") ? 200 : 401,
             openModal:false,
-            loading:false,
+            loading:true,
             component:'InfoCampanha',
             campanhaId:0,
             campanhas:[] as campanhas_i[]
@@ -109,22 +113,34 @@ export default defineComponent({
     methods:{
 
         async list(){
+            this.loading = true
             const resp = await request({
                 method:'post',
                 route:'campanhas/list'
             })
-
+            this.code = resp.code
             if(resp.code == 200){
                 this.campanhas = resp.body
             }
+            this.loading = false
         },
 
-        onCreateCampanha(campanha:any){
-
+        onCreateCampanha(campanha:campanhas_i){
+            this.campanhas.push(campanha)
+            this.openModal = false
         },
-        onCreateCard(card:any){
 
+        onCreateCard(campanha_id:number, card:tarefas){
+            for (let i = 0; i < this.campanhas.length; i++) {
+                if(this.campanhas[i].id == campanha_id){
+                    this.campanhas[i].tarefas.unshift(card)
+                    this.openModal = false
+                    this.update++
+                    return
+                }
+            }
         },
+
         onChangeTo(change:string){
             this.component = change
         }

@@ -57,21 +57,40 @@ import IconStaus from '@/views/app/painel/widgets/_includes/IconStaus.vue';
 import ModalDynamic from '@/components/ModalDynamic.vue';
 import Data from "@/model/libs/Data"
 import Icon from '@/components/Icon.vue';
+import { request } from '@/model/libs/Request';
 export default defineComponent({
 
     methods:{
-        changeState(status:number){
+        async changeState(status:number){
 
-            let oldstate = this.card.status
-            this.card.status = status
+            const resp = await request({
+                method:'post',
+                route:'tarefas/update'
+            }, {
+                campanha_id:this.campanha_id,
+                tarefa:this.card.tarefa,
+                id:this.card.tarefa_id,
+                descricao:this.card.descricao,
+                status:status,
+                createAt:this.card.createAt,
+                dataLimite:this.card.dataLimite ? this.card.dataLimite : ''
+            })
 
-            if(status != oldstate){
-                this.card.show = false
-                this.$emit('recount_cards')
+            if(resp.code == 200){
+
+                let oldstate = this.card.status
+                this.card.status = status
+
+                if(status != oldstate){
+                    this.card.show = false
+                    this.$emit('recount_cards')
+                }
+                
+                this.setColor()
+                this.keyIcon++
+
             }
-            
-            this.setColor()
-            this.keyIcon++
+
         },
         setColor(){
             if(!['ativo', 'finalizado', 'cancelado'].includes(this.status[this.card.status])){
@@ -86,6 +105,10 @@ export default defineComponent({
     },
 
     props:{
+        campanha_id:{
+            type:Number,
+            required:true
+        },
         card:{
             type: Object as () => {
                 tarefa_id:number,
@@ -93,7 +116,7 @@ export default defineComponent({
                 descricao:string,
                 status:number,
                 createAt:string,
-                dataLimite:string,
+                dataLimite?:string,
                 show?:boolean
             },
             required:true

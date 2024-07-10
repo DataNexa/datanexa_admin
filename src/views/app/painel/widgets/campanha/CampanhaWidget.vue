@@ -30,7 +30,7 @@
                     <p class="text-black-light text-center"><i>Não há nada aqui ainda</i></p>
                 </div>
                 <div class="col-12" v-else>
-                    <CardCampanha v-for="card in cardsList" :card="card" @recount_cards="countCards"/>
+                    <CardCampanha :campanha_id="id" v-for="card in cardsList" :card="card" @recount_cards="countCards"/>
                 </div>
             </div>
         </div>
@@ -103,15 +103,17 @@ export default defineComponent({
 
         stateChange(newState:number){
 
-            document.querySelector(`a[name="${this.state}_${this.index}"]`)?.classList.remove('bg-black-super-light')
-            document.querySelector(`a[name="${newState}_${this.index}"]`)?.classList.add('bg-black-super-light')
+            document.querySelector(`a[name="${this.status[this.state]}_${this.index}"]`)?.classList.remove('bg-black-super-light')
+            document.querySelector(`a[name="${this.status[newState]}_${this.index}"]`)?.classList.add('bg-black-super-light')
 
             this.state = newState
             this.noCard = true
+            
             for(let card of this.cardsList) {
                 card.show = card.status == this.state
                 if(card.show) this.noCard = false
             }
+
         }
     },
     props:{

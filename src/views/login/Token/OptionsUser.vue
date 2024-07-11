@@ -226,7 +226,7 @@ export default defineComponent({
                     client_info.slug = u.client_slug ? u.client_slug : 'DataNexa'
                 }
             }
-            const resp = await userService.openSession(slug, tipo_usuario, client_info)
+            const resp = await userService.openSession(slug)
             if(resp.status){
                 App.refreshLocalSystem()
                 this.$emit('redirectTo', 'system')                

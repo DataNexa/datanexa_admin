@@ -29,6 +29,16 @@
                 </div>
             </div>
         </router-link>
+        <router-link v-if="pagesPermissions.includes('contatos')" to="/contatos">
+            <div :class="`left_item action_menu ${atualPage == 'contatos' ? 'selected' : ''}`"  label="Contatos">
+                <div class="item_icon">
+                    <Icon :icon="'IconContatos'" :scale="0.65" fill="primary"/>
+                </div>
+                <div class="item_description py-3">
+                    Contatos
+                </div>
+            </div>
+        </router-link>
         <router-link v-if="pagesPermissions.includes('campanhas')" to="/campanhas">
             <div :class="`left_item action_menu ${atualPage == 'campanhas' ? 'selected' : ''}`"  label="Campanhas">
                 <div class="item_icon">
@@ -111,7 +121,7 @@ export default defineComponent({
         return {
             olderPage:'',
             atualPage:'home',
-            pages:['home', 'campanhas', 'pesquisas', 'monitoramento', 'user'],
+            pages:['home', 'contatos', 'campanhas', 'pesquisas', 'monitoramento', 'user'],
             pagesPermissions:['home', '']
         }
     },

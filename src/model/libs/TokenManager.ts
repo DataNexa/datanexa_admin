@@ -1,11 +1,12 @@
 class TokenManager {
 
     private static instance:TokenManager
-    private token
+    private token:string|null
+    private session:string|null
 
     private constructor(){
         this.token = TokenManager.getCookie('token')
-        //console.log(this.token);
+        this.session = TokenManager.getCookie('session')
     }
 
     static getTokenManager(){
@@ -19,13 +20,26 @@ class TokenManager {
         return this.token
     }
 
+    getSession(){
+        return this.session
+    }
+
     setToken(value:string){
         this.token = value
         TokenManager.setCookie('token', value, 365)
     }
 
+    setSession(value:string){
+        this.session = value 
+        TokenManager.setCookie('session', value, 0.03)
+    }
+
     expireToken(){
         TokenManager.deleteCookie('token')
+    }
+
+    expireSession(){
+        TokenManager.deleteCookie('session')
     }
 
     private static getCookie(name: string): string | null {
@@ -41,7 +55,7 @@ class TokenManager {
   
 
     private static deleteCookie(name: string): void {
-      document.cookie = name + '=; Max-Age=-99999999;';
+        document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     }
 
     private static setCookie(name: string, value: string, days: number): void {
@@ -69,4 +83,16 @@ const expireToken = () => {
     TokenManager.getTokenManager().expireToken()
 }
 
-export { getToken, setToken, expireToken }
+const getSession = () => {
+    return TokenManager.getTokenManager().getSession()
+}
+
+const setSession = (value:string) => {
+    TokenManager.getTokenManager().setSession(value)
+}
+
+const expireSession = () => {
+    TokenManager.getTokenManager().expireSession()
+}
+
+export { getToken, setToken, expireToken, getSession, setSession, expireSession}

@@ -30,13 +30,13 @@
                                             </g>
                                         </g>
                                     </svg>
-                                    <div style="display: inline-block; min-width:100px" class="d-none d-md-inline-block">
-                                        <p class="text-start" style="text-decoration: none; color: black;">{{  nomeAccount  }}</p>
+                                    <div :style="`display: inline-block; min-width:100px`" class="d-none d-md-inline-block">
+                                        <p class="text-start" :style="`text-decoration: none; color: black;`">{{  nomeAccount  }}</p>
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu py-3">
                                     <li><a class="dropdown-item action_menu" href="#" label="Editar Usuário">Editar</a></li>
-                                    <li><a class="dropdown-item action_menu" href="#" label="Configurações do Usuário">Configurações</a></li>
+                                    <li><a @click="genError" class="dropdown-item action_menu" href="#" label="Configurações do Usuário">Configurações</a></li>
                                     <li><a class="dropdown-item action_menu" href="#" label="Saindo...">Sair</a></li>
                                 </ul>
                             </div>
@@ -51,6 +51,7 @@
 
 <script lang="ts">
 import { App } from '@/model/Entidades/App';
+import { request } from '@/model/libs/Request';
 import {defineComponent} from 'vue'
 
 export default defineComponent({
@@ -60,7 +61,16 @@ export default defineComponent({
             nomeAccount:App.getNomeAccount(),
             nomeClient:(App.getUserJson() as any).client_nome
         }
-    }
+    },
+
+    methods: {
+        async genError(){
+            await request({
+                method:'get',
+                route:'401'
+            })
+        }
+    },
 })
 </script>
 

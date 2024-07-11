@@ -131,19 +131,19 @@ const request = async (header:header_i, body?:any):Promise<resp> => {
 
     const body_res = (await response.json() as body_res)
 
-    if(body_res.session){
-        Session.saveSession(body_res.session)
-    }
-
     const resp = { body:body_res.body, code:body_res.code, message:body_res.message }
 
-    if(body_res.redirect){
-        Req.redirectTo(body_res.redirect, resp)
+    if(response.status == 401){
+        Session.expireSessions()
+        Req.redirectTo('login', resp)
     }
 
-    if(Session.isLogged() && response.status == 401){
-        // Session.expireSessions()
-        Req.redirectTo('login', resp)
+    if(body_res.session){
+        Session.saveSession(body_res.session, 'Request')
+    }
+   
+    if(body_res.redirect){
+        Req.redirectTo(body_res.redirect, resp)
     }
 
     return resp

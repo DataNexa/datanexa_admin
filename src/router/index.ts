@@ -63,6 +63,10 @@ const router = createRouter({
       component: () => import('@/views/app/painel/pages/pesquisas/ResponderPesquisaVue.vue')
     },
 
+    /**
+     * ############# MONITORAMENTOS  ##########################
+     */
+
     {
       path:'/monitoramento',
       name:'monitoramento',
@@ -93,6 +97,27 @@ const router = createRouter({
       name:'monitoramento_editar',
       props:true,
       component: () => import('@/views/app/painel/pages/monitoramento/EditarMonitoramento.vue')
+    },
+
+    /**
+     * ############# USER  ##########################
+     */
+
+    {
+      path:'/user',
+      name:'user',
+      component: () => import('@/views/app/painel/pages/UserPage.vue')
+    },
+
+
+    /**
+     * ############# CONTATOS  ##########################
+     */
+
+    {
+      path:'/contatos',
+      name:'contatos',
+      component: () => import('@/views/app/painel/pages/ContatosPage.vue')
     },
 
     {

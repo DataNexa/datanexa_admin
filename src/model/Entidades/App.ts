@@ -17,14 +17,26 @@ class App {
     private static user?:User
     private static system_type:system_type = system_type.LOGIN
     private static connected:boolean = false
+    private static change:boolean = false
 
     private constructor(){ }
 
     static setAccount(account:Account) {
-        if(!App.account){
-            App.connected = true
-            App.account = account
-        }
+        App.connected = true
+        App.account = account
+    }
+
+    static changeUser(){
+        this.connected = false
+        this.change = true
+    }
+
+    static getChange(){
+        if(this.change){
+            this.change = false
+            return true
+        } else return false
+        
     }
 
     static isConnected(){

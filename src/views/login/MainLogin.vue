@@ -27,10 +27,12 @@ import AuthLogin from './Auth/AuthLogin.vue'
 import AuthMain from "./Auth/AuthMain.vue"
 import AuthCreateAccount from './Auth/AuthCreateAccount.vue';
 import AuthRecover from './Auth/AuthRecover.vue';
-import { getToken } from '@/model/libs/TokenManager';
+import { getToken, getSession } from '@/model/libs/TokenManager';
 import authService from '@/model/services/auth.service';
 import Account from '@/model/Entidades/Account';
 import { App } from '@/model/Entidades/App';
+import Session from '@/model/libs/Session';
+import userService from '@/model/services/user.service';
 
 export default defineComponent({
 
@@ -47,7 +49,7 @@ export default defineComponent({
     },
     data() {
         return {
-            percent:1,
+            percent:50,
             loading:true,
             component:"AuthMain",
             email:'',
@@ -58,9 +60,10 @@ export default defineComponent({
 
         async checkToken(){
 
+            this.percent = 50
+
             this.loading = true
             const token = getToken()
-            console.log(token);
             
             if(token == null){
                 this.component = "AuthMain"
@@ -70,10 +73,22 @@ export default defineComponent({
 
             const accRepo = await authService.getAccountData()
             
+            this.percent = 75
+
             if(accRepo.status && accRepo.body){
                 const acc = new Account(accRepo.body.nome, accRepo.body.email)
                 App.setAccount(acc)
             }
+
+            const sess = getSession()
+            
+            if(sess && !App.getChange()){
+                Session.saveSession(sess, 'MainLogin')
+                await userService.setUserBySesson()
+                this.percent = 100
+                return this.redirect('system')
+            }
+
             this.loading = false
             this.component = "OptionsUser"
         },

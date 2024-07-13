@@ -1,4 +1,4 @@
-import { getToken } from "./TokenManager"
+import { getToken, setSession, expireSession } from "./TokenManager"
 enum type_session { TOKEN, SESSION, SESSION_TEMP }
 
 class Session {
@@ -28,7 +28,9 @@ class Session {
         Session.session_temp = new Session(type_session.SESSION_TEMP, value)
     }
 
-    static saveSession(value:string) {
+    static saveSession(value:string, local:string) {
+        console.log("salvou sessao: ", local);
+        setSession(value)
         Session.logged  = true
         Session.session = new Session(type_session.SESSION, value)
     }
@@ -43,6 +45,8 @@ class Session {
     }
 
     static expireSessions(){
+        console.log("expirou sessao");
+        expireSession()
         Session.logged = false
         Session.session = undefined
         Session.session_temp = undefined

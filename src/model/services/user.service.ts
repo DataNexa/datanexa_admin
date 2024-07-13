@@ -17,6 +17,10 @@ interface response {
     message:string
 }
 
+enum type_user {
+    ANONIMUS, GHOST, ADMIN, ADMIN_CLIENT, USER_CLIENT, BOT
+}
+
 export default {
     
     async getListUsers():Promise<{ status:boolean, list:user[] }>{
@@ -33,7 +37,7 @@ export default {
 
     },
 
-    async openSession(slug:string, tipo_usuario:string, client:{slug:string, nome:string}):Promise<response>{
+    async openSession(slug:string):Promise<response>{
         
         const req = await request({
             sess_type:'TOKEN',
@@ -47,7 +51,14 @@ export default {
             return { status: false, message: req.message?req.message:'' }
 
         const sess = req.body.session
-        Session.saveSession(sess)
+        Session.saveSession(sess, 'user.service')
+        const status_user = await this.setUserBySesson()
+
+        return { status: status_user, message:""}
+        
+    },
+
+    async setUserBySesson():Promise<boolean>{
 
         const req2 = await request({
             sess_type:'SESSION',
@@ -56,26 +67,28 @@ export default {
         })
 
         if(req2.code != 200)
-            return { status: false, message: req.message ? req.message: '' }
+            return false
 
         const userAPI = req2.body as {
             nome: string,
             email: string,
             slug: string,
             user_type: number,
-            permissions: string[]
+            permissions: string[],
+            client_nome:string,
+            client_slug:string
         }
 
         const acc  = new Account(userAPI.nome, userAPI.email)
-        const user = new User(slug, tipo_usuario)
+        const user = new User(userAPI.slug, type_user[userAPI.user_type])
         user.setPermissions(userAPI.permissions)
-        user.setClientNome(client.nome)
-        user.setClientSlug(client.slug)
+        user.setClientNome(userAPI.client_nome)
+        user.setClientSlug(userAPI.client_slug)
         App.setUser(user)
         App.setAccount(acc)
 
-        return { status: true, message:""}
-        
+        return true
+
     },
 
     async changeAccepted(slug:string, accepted:number){

@@ -73,7 +73,7 @@ export default defineComponent({
                 if(this.input.text.value && reg.test(this.input.text.value)){
                     this.input.validate = true
                     this.input.showError = false
-                    return this.$emit('input_change_value', this.input.validate)
+                    return this.$emit('input_change_value', this.input.validate, this.input.text.value)
                 }
 
                 this.showError = true
@@ -86,7 +86,7 @@ export default defineComponent({
                 this.input.showError = false
             }
 
-            this.$emit('input_change_value', this.input.validate)
+            this.$emit('input_change_value', this.input.validate, this.input.text?.value)
 
         }
 

@@ -1,6 +1,7 @@
 <template>
+    <AlertVue :alert="alert"/>
     <ModalDynamic v-if="openModal" @close_modal="openModal=false">
-        <component :is="component"></component>
+        <component :is="component" @refresh="getListUsers" @close="openModal = false" :id="userSelectedId" :key="attmodal"></component>
     </ModalDynamic>
     <Page :code="code">
         <template v-slot:header_page>
@@ -31,30 +32,34 @@
                 </div>
             </div>
             <div class="container-fluid" v-if="!loading">
-                <Widget :loading="false">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Nome</th>
-                                <th scope="col">e-mail</th>
-                                <th scope="col">tipo</th>
-                                <th scope="col">slug</th>
-                                <th scope="col">status</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="user of listaUsuarios">
-                                <td>{{ user.nome }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>{{ getUserType(user.tipo_usuario) }}</td>
-                                <td>{{ simplifySlug(user.slug) }}</td>
-                                <td v-html="user.accepted == 1 && user.ativo == 1 ? `<p class='text-primary'>ativo</p>` : user.ativo == 0 ? `<p class='text-danger'>bloqueado</p>`: user.accepted == 0 ? `<p class='text-warning'>aguardando</p>` :  user.accepted == 2 ? 'não aceitou' :''"></td>
-                                <td><button class="btn btn-sm btn-primary mx-auto d-block">+</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </Widget>
+                <div class="row">
+                    <div class="col-12">
+                        <Widget :loading="false" :col="`12`">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Nome</th>
+                                        <th scope="col">e-mail</th>
+                                        <th scope="col">tipo</th>
+                                        <th scope="col">slug</th>
+                                        <th scope="col">status</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>    
+                                <tbody>
+                                    <tr v-for="user of listaUsuarios">
+                                        <td>{{ user.nome }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ getUserType(user.tipo_usuario) }}</td>
+                                        <td>{{ simplifySlug(user.slug) }}</td>
+                                        <td v-html="user.accepted == 1 && user.ativo == 1 ? `<p class='text-primary'>ativo</p>` : user.ativo == 0 ? `<p class='text-danger'>bloqueado</p>`: user.accepted == 0 ? `<p class='text-warning'>aguardando</p>` :  user.accepted == 2 ? 'não aceitou' :''"></td>
+                                        <td><button @click="onClick(user.id)" class="btn btn-sm btn-primary mx-auto d-block">+</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </Widget>
+                    </div>
+                </div>
             </div>
         </template>
     </Page>
@@ -71,6 +76,8 @@ import { App } from '@/model/Entidades/App';
 import NovoUsuario from '@/views/app/painel/widgets/user/NovoUsuario.vue'
 import Widget from '@/components/Widget.vue';
 import { request } from '@/model/libs/Request';
+import AlertVue from '@/components/AlertVue.vue';
+import UserSelect from '@/views/app/painel/widgets/user/UserSelect.vue';
 
 interface user_complete {
     id:number,
@@ -87,7 +94,7 @@ interface user_complete {
 const type_users = ['', '', '', 'Admin', 'Usuário']
 
 export default defineComponent({
-    components:{Page, Icon, InputVue, LoadingSimple, ModalDynamic, NovoUsuario, Widget},
+    components:{Page, Icon, InputVue, AlertVue, LoadingSimple, UserSelect, ModalDynamic, NovoUsuario, Widget},
     created() {
         this.getListUsers()
     },
@@ -97,11 +104,24 @@ export default defineComponent({
             loading:false,
             openModal:false,
             component:'NovoUsuario',
-            listaUsuarios:[] as user_complete[]
+            listaUsuarios:[] as user_complete[],
+            userSelectedId:0,
+            attmodal:1,
+            alert:{
+                type:'danger',
+                text:'',
+                show:false
+            }
         }
     },
     methods:{
-        async getListUsers(){
+        async getListUsers(type?:string, message?:string){
+
+            if(type && message){
+                this.alert.text = message 
+                this.alert.type = type 
+                this.alert.show = true
+            }
 
             if(this.code != 200){
                 return
@@ -126,6 +146,13 @@ export default defineComponent({
 
         simplifySlug(slug:string) {
             return slug.split('#')[0]
+        },
+
+        onClick(id:number){
+            this.userSelectedId = id
+            this.component = 'UserSelect'
+            this.attmodal++
+            this.openModal = true
         }
     }
 })

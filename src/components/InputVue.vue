@@ -17,8 +17,8 @@ import SearchVue from "./inputs/SearchVue.vue";
 export default defineComponent({
 
     methods:{
-        input_change_value(validate:boolean){
-            this.$emit('change_value', this.input.slug, validate)
+        input_change_value(validate:boolean, value:any){
+            this.$emit('change_value', this.input.slug, value, validate)
         },
         typing(e:Event){
             this.$emit('onTypingEvent', this.input.slug, e)

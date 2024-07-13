@@ -29,7 +29,7 @@ export default defineComponent({
         changeValue(){
             if(this.input.radio){
                 this.input.radio.value = this.value
-                this.$emit('input_change_value')
+                this.$emit('input_change_value', true, this.value)
             }
             if(this.input.required && this.input.radio && this.input.radio.value?.trim() == ''){
                 this.input.showError = true

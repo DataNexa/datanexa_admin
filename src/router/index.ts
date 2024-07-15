@@ -117,7 +117,7 @@ const router = createRouter({
     {
       path:'/contatos',
       name:'contatos',
-      component: () => import('@/views/app/painel/pages/ContatosPage.vue')
+      component: () => import('@/views/app/painel/pages/GruposPage.vue')
     },
 
     {

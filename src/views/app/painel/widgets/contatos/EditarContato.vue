@@ -1,44 +1,24 @@
 <template>
     <AlertVue :alert="alert" />
-    <Widget :loading="false">
-        <FormVue @click_button="criar" :formdata="formData" :buttons="buttons"/>
-    </Widget>
+    <FormVue @click_button="editar" :formdata="formData" :buttons="buttons"/>
 </template>
 
 <script lang="ts">
 
 import { defineComponent } from 'vue'
-import FormVue from '@/components/FormVue.vue';
-import Widget from '@/components/Widget.vue';
-import { request } from '@/model/libs/Request';
 import AlertVue from '@/components/AlertVue.vue';
+import FormVue from '@/components/FormVue.vue';
+
 
 export default defineComponent({
-    
-    components:{ FormVue, Widget, AlertVue },
 
-    methods: {
-        async criar(){
-            const req = await request({
-                method:'post',
-                route:'grupos/create'
-            },{
-                titulo:this.formData.inputs[0].text.value,
-                descricao:this.formData.inputs[1].text.value,
-                link:this.formData.inputs[2].text.value,
-                ativo:1
-            })
-            if(req.code == 200){
-                this.$emit('reload')
-                this.$emit('close')
-            } else {
-                this.alert.type = 'danger'
-                this.alert.text = req.message ? req.message : 'Erro ao tentar criar grupo'
-                this.alert.show = true
-            }
-            this.buttons[0].loading = false
+    methods:{
+        editar(){
+
         }
     },
+
+    components:{ AlertVue, FormVue },
 
     data() {
         return {
@@ -98,7 +78,7 @@ export default defineComponent({
             ]
         }
     },
-    
+
 })
 
 </script>

@@ -39,7 +39,7 @@
                     </div>
                 </div>
             </div>
-            <div class="container-fluid" v-if="!loading">
+            <div class="container-fluid" v-if="!loading" >
                 <div class="row">
                     <ListCampanhaWidget 
                     :key="update"
@@ -122,6 +122,8 @@ export default defineComponent({
             if(resp.code == 200){
                 this.campanhas = resp.body
             }
+            console.log(this.campanhas);
+            
             this.loading = false
         },
 

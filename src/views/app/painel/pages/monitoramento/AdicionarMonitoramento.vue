@@ -116,7 +116,7 @@ export default defineComponent({
                             Campo obrigatório
                            `,
                         message:`
-                            1 - Este campo direciona o BOT a buscar publicações nas redes sociais de forma mais direcionada. <br>
+                            1 - Este campo direciona o BOT a buscar publicações nas redes sociais de forma mais eficiente. <br>
                             2 - Use quantas hashtags quiser. O BOT irá buscar publicações em todas elas.<br>
                             3 - Lembre-se, hashtags sem ter convergência com alvo pode atrapalhar os resultados do seu monitoramento. <br>
                         `

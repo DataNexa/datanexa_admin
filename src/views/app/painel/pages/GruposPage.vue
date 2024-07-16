@@ -34,12 +34,14 @@
             </div>
             <div class="container-fluid" v-if="!loading">
                 <div class="row py-3">
-                    <div class="col-12 col-md-6 col-lg-4">
+                    <div class="col-12 col-md-6 col-lg-4" v-for="grupo of grupos">
                         <Widget col="12" :loading="false">
-                            <h5 class="text-center">titulo</h5>
-                            <p class="text-center">texto</p>
-                            <a target="_blank"href="#" class="text-center"><IconWhatsapp/> Grupo do WhatsApp</a>
-                            <button style="width: 50%;" class="btn btn-outline-primary btn-sm d-block mx-auto mt-2"> + detalhes</button>
+                            <h5 class="text-center">{{ grupo.titulo }}</h5>
+                            <p class="text-center">{{ grupo.descricao }}</p>
+                            <a v-if="grupo.link && grupo.link.trim() != ''" target="_blank" :href="grupo.link" class="text-center"><IconWhatsapp/> Grupo do WhatsApp</a>
+                            <router-link :to="`contatos/${grupo.id}`">
+                                <button style="width: 50%;" class="btn btn-outline-primary btn-sm d-block mx-auto mt-2"> + detalhes</button>
+                            </router-link>
                         </Widget>
                     </div>
                 </div>

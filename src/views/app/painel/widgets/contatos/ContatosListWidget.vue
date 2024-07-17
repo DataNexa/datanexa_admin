@@ -1,6 +1,11 @@
 <template>
+    <AlertVue :alert="alert"/>
     <ModalDynamic v-if="openModal" @close_modal="openModal=false">
-    
+        <component :is="component" @changeToEditar="() => {
+            openModal = false
+            component = 'EditarContato'
+            openModal = true
+        }" @close="openModal=false" @deleteContato="deleteContato" @reload="$emit('reload')" :contato="contato"></component>
     </ModalDynamic>
     <div class="container-fluid">
         <div class="row">
@@ -20,10 +25,11 @@
                         <IconFacebook  v-if="contato.facebook.trim() != ''"/>
                         <IconInstagram  v-if="contato.instagram.trim() != ''"/>
                         <IconTwitter  v-if="contato.twitter.trim() != ''"/>
+                        <Icon v-if="contato.email.trim() != ''":icon="`IconEmail`" :size="30"/>
                         </p>
                     </div>
                     <div class="col-12 col-md-1">
-                        <button class="btn btn-sm btn-outline-primary d-block ms-auto">+</button>
+                        <button @click="open(contato.id, 'ContatoSelected')" class="btn btn-sm btn-outline-primary d-block ms-auto">+</button>
                     </div>
                 </div>
             </Widget>
@@ -39,8 +45,13 @@ import ModalDynamic from '@/components/ModalDynamic.vue'
 import IconWhatsapp from '@/components/icons/IconWhatsapp.vue'
 import IconFacebook from '@/components/icons/IconFacebook.vue'
 import IconTwitter from '@/components/icons/IconTwitter.vue'
-import IconEmail from '@/components/icons/IconEmail.vue'
+import Icon from '@/components/Icon.vue'
 import IconInstagram from '@/components/icons/IconInstagram.vue'
+
+import ContatoSelected from './ContatoSelected.vue'
+import EditarContato from './EditarContato.vue'
+import { request } from '@/model/libs/Request'
+import AlertVue from '@/components/AlertVue.vue'
 
 
 interface contatos_i {
@@ -57,11 +68,60 @@ interface contatos_i {
 
 export default defineComponent({
 
-    components:{ Widget,ModalDynamic, IconWhatsapp, IconFacebook, IconTwitter, IconEmail, IconInstagram },
+    components:{ ContatoSelected, AlertVue, EditarContato, Widget, ModalDynamic, IconWhatsapp, IconFacebook, IconTwitter, Icon, IconInstagram },
+
+    methods: {
+        open(contato_id:number, local:string){
+            if(this.contatos)
+            for(const contact of this.contatos){
+                if(contact.id == contato_id){
+                    this.contato = contact
+                    this.component = local
+                    this.openModal = true
+                }
+            } 
+        },
+        async deleteContato(){
+            
+            if(!this.contato){
+                return 
+            }
+
+            const req = await request({
+                method:'post',
+                route:'contatos/delete'
+            }, {
+                grupo_id:this.contato.grupo_id,
+                id:this.contato.id
+            })
+
+            if(req.code == 200){
+                this.openModal = false
+                this.alert.type = 'success'
+                this.alert.text = 'Contato excluido com sucesso'
+                this.alert.show = true
+                setTimeout(() => {
+                    this.$emit('reload')
+                }, 1000)
+            } else {
+                this.alert.type = 'danger'
+                this.alert.text = req.message ? req.message : 'Erro ao tentar exlcluir contato'
+                this.alert.show = true
+            }
+
+        }
+    },
 
     data() {
         return {
-            openModal:false
+            openModal:false,
+            component:"ContatoSelected",
+            contato:{} as contatos_i,
+            alert:{
+                text:'',
+                show:false,
+                type:'danger'
+            }
         }
     },
     props:{

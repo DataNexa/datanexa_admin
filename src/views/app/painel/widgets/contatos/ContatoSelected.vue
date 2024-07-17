@@ -8,8 +8,9 @@
                 <p><IconFacebook/> {{ contato.facebook }}</p>
                 <p><IconInstagram/> {{ contato.instagram }}</p>
                 <p><IconTwitter/> {{ contato.twitter }}</p>
-                <p><IconEmail :scale="0.5" :fill="`black`"/> {{ contato.email }}</p>
-                <button class="btn btn-sm btn-outline-primary">editar</button>
+                <p><Icon :icon="`IconEmail`" :size="30"/> {{ contato.email }}</p>
+                <button @click="$emit('changeToEditar')" class="btn btn-sm btn-outline-primary">editar</button>
+                <button @click="$emit('deleteContato')" class="btn btn-sm btn-outline-danger d-block ms-auto">excluir</button>
             </div>
         </div>
     </div>
@@ -22,7 +23,7 @@ import IconWhatsapp from '@/components/icons/IconWhatsapp.vue'
 import IconFacebook from '@/components/icons/IconFacebook.vue'
 import IconInstagram from '@/components/icons/IconInstagram.vue'
 import IconTwitter from '@/components/icons/IconTwitter.vue'
-import IconEmail from '@/components/icons/IconEmail.vue'
+import Icon from '@/components/Icon.vue'
 
 interface contatos_i {
     id:number,
@@ -38,7 +39,7 @@ interface contatos_i {
 
 export default defineComponent({
 
-    components:{ IconWhatsapp, IconFacebook, IconInstagram, IconTwitter, IconEmail },
+    components:{ IconWhatsapp, IconFacebook, IconInstagram, IconTwitter, Icon },
 
     props:{
         contato:{

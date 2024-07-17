@@ -1,7 +1,7 @@
 <template>
     
     <ModalDynamic v-if="openModal" @close_modal="openModal=false">
-        <component :is="component" :id="id" @createContato="listContatos" @close="openModal=false"></component>
+        <component :is="component" :grupo="grupo" @editedGrupo="onEdited" :id="id" @createContato="listContatos" @close="openModal=false"></component>
     </ModalDynamic>
 
     <Page :code="code">
@@ -17,7 +17,19 @@
                 <a href="#">
                     <!-- <Icon icon="IconLogs" :scale="0.7" fill="blue"/>-->
                 </a>
-                <button class="btn btn-outline-primary mx-2" @click="openModal=true">Novo Contato</button>
+                <button class="btn btn-outline-primary mx-2" @click="() => {
+                    openModal=true
+                    component = 'AdicionarContato'
+                }">Novo Contato</button>
+                <button class="btn btn-outline-primary mx-2" @click="() => {
+                    openModal=true
+                    component = 'EditarGrupo'
+                }">Editar Grupo</button>
+                <button class="btn btn-sm btn-outline-danger mx-2 d-block ms-auto" @click="() => {
+                    openModal=true
+                    component = 'ExcluirGrupo'
+                }">Excluir Grupo</button>
+                
             </div>
             
         </template>
@@ -50,7 +62,7 @@
                 </div>
                 <div v-if="!loadingContatos" class="row">
                     <div class="col-12">
-                        <ContatosListWidget v-if="contatos.length > 0" :contatos="contatos" />
+                        <ContatosListWidget v-if="contatos.length > 0" :contatos="contatos" @reload="listContatos"/>
                     </div>
                 </div>
                
@@ -75,6 +87,7 @@ import ContatosListWidget from '@/views/app/painel/widgets/contatos/ContatosList
 import { App } from '@/model/Entidades/App';
 import { request } from '@/model/libs/Request';
 import EditarGrupo from '@/views/app/painel/widgets/contatos/EditarGrupo.vue';
+import ExcluirGrupo from '@/views/app/painel/widgets/contatos/ExcluirGrupo.vue';
 import AdicionarContato from '@/views/app/painel/widgets/contatos/AdicionarContato.vue';
 
 interface contatos_i {
@@ -100,7 +113,7 @@ interface grupos_i {
 
 export default defineComponent({
 
-    components:{ ContatosListWidget, AdicionarContato, EditarGrupo, IconWhatsapp, Widget, Page, Icon, LoadingSimple, ModalDynamic },
+    components:{ ContatosListWidget, AdicionarContato, EditarGrupo, IconWhatsapp, Widget, Page, Icon, LoadingSimple, ModalDynamic, ExcluirGrupo },
 
     created() {
         this.init()
@@ -126,7 +139,13 @@ export default defineComponent({
             total:0
         }
     },
+
     methods:{
+
+        async onEdited(editedGrup:grupos_i){
+            this.grupo = editedGrup
+            this.openModal = false
+        },
 
         async init(){
             const status = await this.getDataGrupo()
@@ -175,10 +194,8 @@ export default defineComponent({
 
             if(req.code == 200){
                 this.contatos = req.body as contatos_i[]
+                this.total = this.contatos.length
             } 
-
-            console.log(this.contatos);
-            
 
             this.loadingContatos = false
 

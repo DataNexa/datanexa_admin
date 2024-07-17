@@ -117,23 +117,16 @@ const router = createRouter({
     {
       path:'/contatos',
       name:'contatos',
-      component: () => import('@/views/app/painel/pages/ContatosPage.vue')
+      component: () => import('@/views/app/painel/pages/GruposPage.vue')
     },
 
     {
-      path:'/test',
-      component: TestViewVue
-    }
-    /*
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
-    */
+      path:'/contatos/:id',
+      name:'contato_selected',
+      component: () => import('@/views/app/painel/pages/contatos/ContatosPage.vue'),
+      props:true
+    },
+
   ]
 })
 

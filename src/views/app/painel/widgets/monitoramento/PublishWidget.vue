@@ -19,7 +19,7 @@
             </div>
             <div class="row" style="min-height:40px">
                 <div class="col-12 col-md-8">
-                    <a :href="`https://${link}`" target="_blank" class="d-block me-atuo">link da publicação</a>
+                    <a :href="`${link}`" target="_blank" class="d-block me-atuo">link da publicação</a>
                 </div>
                 <div class="col-12 col-md-4 text-start text-md-end">
                     <span >

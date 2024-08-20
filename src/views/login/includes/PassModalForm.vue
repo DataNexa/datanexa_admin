@@ -28,8 +28,9 @@ export default defineComponent({
         checkAndSaveData(slug:string){
             if(slug == 'cancel'){
                 this.$emit('close_modal')
+            } else {
+                this.$emit('')
             }
-            
         }
     },
     data():data{

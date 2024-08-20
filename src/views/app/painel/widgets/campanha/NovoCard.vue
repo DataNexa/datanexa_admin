@@ -56,7 +56,7 @@ export default defineComponent({
                     tarefa_id: parseInt(req.body),
                     tarefa:this.formData.inputs[0].text.value,
                     status:1,
-                    createAt:hoje.toBr(),
+                    createAt:hoje.toEn(),
                     descricao:this.formData.inputs[1].text.value,
                     dataLimite:this.formData.inputs[2].text.value
                 } 

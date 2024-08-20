@@ -8,17 +8,17 @@
         
         <h5>{{ card.tarefa }}</h5>
         <p>{{ card.descricao }}</p>
-        <div class="row" v-if="status[card.status]=='ativo'">
+        <div class="row" v-if="status[card.status]=='ativo' && canUpdate">
             <div class="col-6">
                 <button class="btn btn-sm btn-outline-danger" v-on:click="changeState(3)">Cancelar Cartão</button>
             </div>
             <div class="col-6">
-                <button class="btn btn-success d-block ms-auto" v-on:click="changeState(2)">Feito</button>
+                <button v-if="canUpdate" class="btn btn-success d-block ms-auto" v-on:click="changeState(2)">Feito</button>
             </div>
         </div>
         <div class="row" v-else>
             <div class="col-12">
-                <button class="btn btn-info d-block ms-auto" v-on:click="changeState(1)">Reativar Cartão</button>
+                <button v-if="canUpdate" class="btn btn-info d-block ms-auto" v-on:click="changeState(1)">Reativar Cartão</button>
             </div>
         </div>
     </ModalDynamic>
@@ -58,6 +58,9 @@ import ModalDynamic from '@/components/ModalDynamic.vue';
 import Data from "@/model/libs/Data"
 import Icon from '@/components/Icon.vue';
 import { request } from '@/model/libs/Request';
+import { App } from '@/model/Entidades/App';
+
+
 export default defineComponent({
 
     methods:{
@@ -133,7 +136,9 @@ export default defineComponent({
             colorIcon:"blue",
             colorPercent:"blue",
             expiraEm:"",
-            modifiEm:""
+            modifiEm:"",
+            canUpdate:App.userHasPermission('campanhas@tarefas_update')
+
         }
     },
     created() {

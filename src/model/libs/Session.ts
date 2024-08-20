@@ -1,4 +1,4 @@
-import { getToken, setSession, expireSession } from "./TokenManager"
+import { getToken, setSession, expireSession, expireToken } from "./TokenManager"
 enum type_session { TOKEN, SESSION, SESSION_TEMP }
 
 class Session {
@@ -53,7 +53,7 @@ class Session {
     }
 
     static deleteToken(){
-        // deletar cookie
+        expireToken()
         Session.token = undefined
     }
 

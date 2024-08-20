@@ -150,5 +150,8 @@ const request = async (header:header_i, body?:any):Promise<resp> => {
 
 }
 
+const toLogin = () => {
+    Req.redirectTo('login', { body:{}, code:401, message:''})
+}
 
-export { request, setRedirection, logoff, download }
+export { request, setRedirection, logoff, download, toLogin}

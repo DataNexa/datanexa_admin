@@ -35,9 +35,13 @@
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu py-3">
-                                    <li><a class="dropdown-item action_menu" href="#" label="Editar Usuário">Editar</a></li>
-                                    <li><a @click="genError" class="dropdown-item action_menu" href="#" label="Configurações do Usuário">Configurações</a></li>
-                                    <li><a class="dropdown-item action_menu" href="#" label="Saindo...">Sair</a></li>
+                                    <li>
+                                        <router-link to="/account">
+                                            <a class="dropdown-item action_menu" href="#" label="Configurações do Usuário">Configuração</a>
+                                        </router-link>
+                                    </li>
+                                    <li><a @click="genError" class="dropdown-item action_menu" href="#" label="Configurações do Usuário">Alterar Usuário</a></li>
+                                    <li><a @click="sair" class="dropdown-item action_menu" href="#" label="Saindo...">Sair</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -51,7 +55,8 @@
 
 <script lang="ts">
 import { App } from '@/model/Entidades/App';
-import { request } from '@/model/libs/Request';
+import { toLogin, request } from '@/model/libs/Request';
+import Session from '@/model/libs/Session';
 import {defineComponent} from 'vue'
 
 export default defineComponent({
@@ -69,6 +74,19 @@ export default defineComponent({
                 method:'get',
                 route:'401'
             })
+        },
+
+        async sair(){
+            const req = await request({
+                sess_type:'TOKEN',
+                method:'post',
+                route:'account/expireSessions'
+            },)
+            if(req.code == 200){
+                Session.deleteToken()
+                Session.expireSessions()
+                toLogin()
+            }
         }
     },
 })

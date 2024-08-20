@@ -9,8 +9,8 @@
                 <p><IconInstagram/> {{ contato.instagram }}</p>
                 <p><IconTwitter/> {{ contato.twitter }}</p>
                 <p><Icon :icon="`IconEmail`" :size="30"/> {{ contato.email }}</p>
-                <button @click="$emit('changeToEditar')" class="btn btn-sm btn-outline-primary">editar</button>
-                <button @click="$emit('deleteContato')" class="btn btn-sm btn-outline-danger d-block ms-auto">excluir</button>
+                <button v-if="canEdit" @click="$emit('changeToEditar')" class="btn btn-sm btn-outline-primary">editar</button>
+                <button v-if="canDelete" @click="$emit('deleteContato')" class="btn btn-sm btn-outline-danger d-block ms-auto">excluir</button>
             </div>
         </div>
     </div>
@@ -24,6 +24,7 @@ import IconFacebook from '@/components/icons/IconFacebook.vue'
 import IconInstagram from '@/components/icons/IconInstagram.vue'
 import IconTwitter from '@/components/icons/IconTwitter.vue'
 import Icon from '@/components/Icon.vue'
+import { App } from '@/model/Entidades/App';
 
 interface contatos_i {
     id:number,
@@ -46,7 +47,14 @@ export default defineComponent({
             type:Object as () => contatos_i,
             required:true
         }
-    }
+    },
+
+    data() {
+        return {
+            canEdit: App.userHasPermission('contatos@update'),
+            canDelete: App.userHasPermission('contatos@delete'),
+        }
+    },
 
 })
 

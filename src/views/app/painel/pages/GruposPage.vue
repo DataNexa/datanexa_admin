@@ -19,7 +19,7 @@
                 <a href="#">
                     <!-- <Icon icon="IconLogs" :scale="0.7" fill="blue"/>-->
                 </a>
-                <button class="btn btn-outline-primary mx-2" @click="openModal=true">Novo Grupo</button>
+                <button v-if="canAddGrupo" class="btn btn-outline-primary mx-2" @click="openModal=true">Novo Grupo</button>
             </div>
             
         </template>
@@ -90,7 +90,8 @@ export default defineComponent({
             openModal:false,
             grupoId:0,
             component:'AdicionarGrupo',
-            grupos:[] as Array<grupos_i>
+            grupos:[] as Array<grupos_i>,
+            canAddGrupo:App.userHasPermission('contatos@create_group')
         }
     },
     methods:{

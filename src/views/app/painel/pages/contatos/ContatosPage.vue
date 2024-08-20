@@ -17,15 +17,15 @@
                 <a href="#">
                     <!-- <Icon icon="IconLogs" :scale="0.7" fill="blue"/>-->
                 </a>
-                <button class="btn btn-outline-primary mx-2" @click="() => {
+                <button v-if="canAddContato" class="btn btn-outline-primary mx-2" @click="() => {
                     openModal=true
                     component = 'AdicionarContato'
                 }">Novo Contato</button>
-                <button class="btn btn-outline-primary mx-2" @click="() => {
+                <button v-if="canEdit" class="btn btn-outline-primary mx-2" @click="() => {
                     openModal=true
                     component = 'EditarGrupo'
                 }">Editar Grupo</button>
-                <button class="btn btn-sm btn-outline-danger mx-2 d-block ms-auto" @click="() => {
+                <button v-if="canDelete" class="btn btn-sm btn-outline-danger mx-2 d-block ms-auto" @click="() => {
                     openModal=true
                     component = 'ExcluirGrupo'
                 }">Excluir Grupo</button>
@@ -136,7 +136,10 @@ export default defineComponent({
             component:'AdicionarContato',
             grupo: {} as grupos_i,
             contatos:[] as Array<contatos_i>,
-            total:0
+            total:0,
+            canEdit: App.userHasPermission('contatos@update_group'),
+            canAddContato: App.userHasPermission('contatos@create'),
+            canDelete: App.userHasPermission('contatos@delete_group'),
         }
     },
 

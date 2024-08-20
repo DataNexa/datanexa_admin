@@ -53,10 +53,8 @@ class User {
     havePermissions(permission:string, local_app:string){
         if(local_app == 'LOGIN') return true
         if(this.tipo_usuario == 'ADMIN' && local_app == 'ADMIN') return true 
-        else {
-            if(this.tipo_usuario == 'ADMIN_CLIENT' || this.tipo_usuario == 'GHOST') return true
-            return this.permissions.includes(permission)
-        }
+        if(this.tipo_usuario == 'ADMIN_CLIENT' || this.tipo_usuario == 'GHOST') return true
+        return this.permissions.includes(permission)
     }
 
     havePagePermission(page:string){

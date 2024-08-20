@@ -9,6 +9,12 @@ const router = createRouter({
       name: 'home',
       component: HomeView
     },
+
+    {
+      path:'/account',
+      name:'account_page',
+      component: () => import('@/views/app/painel/pages/AccountPage.vue')
+    },
     /**
      * ############# CAMPANHAS  ##########################
      */

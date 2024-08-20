@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="container-fluid" v-if="!loading">
-                <CampanhaHomeWidget/>
+                <!--<CampanhaHomeWidget/> -->
             </div>
         </template>
     </Page>

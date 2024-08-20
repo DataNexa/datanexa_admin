@@ -12,7 +12,7 @@
                 <a href="#">
                     <!-- <Icon icon="IconLogs" :scale="0.7" fill="blue"/>-->
                 </a>
-                <button class="btn btn-outline-primary mx-2">Novo Grupo</button>
+                <button class="btn btn-outline-primary mx-2" v-if="canAddGrupo">Novo Grupo</button>
             </div>
             
         </template>
@@ -61,7 +61,8 @@ export default defineComponent({
     data(){
         return {
             code:App.havePagePermission("user") ? 200 : 401,
-            loading:false
+            loading:false,
+            canAddGrupo:App.userHasPermission('contatos@create_group')
         }
     },
 

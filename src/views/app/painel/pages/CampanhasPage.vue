@@ -24,7 +24,7 @@
                 <button @click="() => {
                     component = 'NovaCampanha'
                     openModal = true
-                }" class="btn btn-outline-primary mx-2">Nova Campanha</button>
+                }" class="btn btn-outline-primary mx-2" v-if="canAddCampanha">Nova Campanha</button>
             </div>
             <div class="col-12 col-md-3">
                 <!-- <InputVue :input="input" @input_change_value="search" @input_searching="load"/>  -->
@@ -107,7 +107,8 @@ export default defineComponent({
             loading:true,
             component:'InfoCampanha',
             campanhaId:0,
-            campanhas:[] as campanhas_i[]
+            campanhas:[] as campanhas_i[],
+            canAddCampanha:App.userHasPermission('campanhas@create')
         }
     },
     methods:{
@@ -122,8 +123,6 @@ export default defineComponent({
             if(resp.code == 200){
                 this.campanhas = resp.body
             }
-            console.log(this.campanhas);
-            
             this.loading = false
         },
 
@@ -133,6 +132,8 @@ export default defineComponent({
         },
 
         onCreateCard(campanha_id:number, card:tarefas){
+            console.log(card);
+            
             for (let i = 0; i < this.campanhas.length; i++) {
                 if(this.campanhas[i].id == campanha_id){
                     this.campanhas[i].tarefas.unshift(card)

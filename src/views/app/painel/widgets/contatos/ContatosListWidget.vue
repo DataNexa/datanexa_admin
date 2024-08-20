@@ -52,7 +52,7 @@ import ContatoSelected from './ContatoSelected.vue'
 import EditarContato from './EditarContato.vue'
 import { request } from '@/model/libs/Request'
 import AlertVue from '@/components/AlertVue.vue'
-
+import { App } from '@/model/Entidades/App';
 
 interface contatos_i {
     id:number,
@@ -117,6 +117,9 @@ export default defineComponent({
             openModal:false,
             component:"ContatoSelected",
             contato:{} as contatos_i,
+            canEdit: App.userHasPermission('contatos@update_group'),
+            canAddContato: App.userHasPermission('contatos@create'),
+            canDelete: App.userHasPermission('contatos@delete_group'),
             alert:{
                 text:'',
                 show:false,

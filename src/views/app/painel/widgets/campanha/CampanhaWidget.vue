@@ -37,7 +37,7 @@
 
         <div class="container-fluid" v-if="state == 1">
             <div class="row">
-                <button @click="$emit('createCard')" class="btn btn-primary">Adicionar Cartão</button>
+                <button v-if="canAddTask" @click="$emit('createCard')" class="btn btn-primary">Adicionar Tarefa</button>
             </div>
         </div>
 
@@ -50,6 +50,8 @@ import Widget from '@/components/Widget.vue';
 import CardCampanha from '@/views/app/painel/widgets/campanha/CardCampanhaWidget.vue';
 import IconStaus from '@/views/app/painel/widgets/_includes/IconStaus.vue';
 import Icon from '@/components/Icon.vue';
+import { App } from '@/model/Entidades/App';
+
 interface card_list {
     tarefa_id:number,
     tarefa:string,
@@ -67,7 +69,8 @@ interface data {
     c_ativo:number,
     c_finalizado:number,
     c_cancelado:number,
-    noCard:boolean
+    noCard:boolean,
+    canAddTask:boolean
 }
 
 export default defineComponent({
@@ -80,13 +83,15 @@ export default defineComponent({
             c_ativo:0,
             c_cancelado:0,
             c_finalizado:0,
-            noCard:false
+            noCard:false,
+            canAddTask:false
         }
     },
     created() {
         this.cardsList = this.cards
         this.countCards()
         this.stateChange(1)
+        this.canAddTask = App.userHasPermission('campanhas@tarefas_create')
     },
     methods:{
 

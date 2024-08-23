@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-12">
                     <h3 class="text-primary">Solicitação para Uso</h3>
-                    <h5>Ao aceitar você está concordando com os <a href="#" target="_blank">termos de responsabilidade e política de privacidade</a> para usar a plataforma DataNexa na conta do cliente.</h5>
+                    <h5>Ao aceitar você está concordando com os <a href="politica_de_privacidade.html" target="_blank">termos de responsabilidade e política de privacidade</a> para usar a plataforma DataNexa na conta do cliente.</h5>
                     <p class="mt-2">Cliente: <b>{{ modalInfo.cliente_nome }}</b></p>
                     <p>Tipo de Usuário: <b>{{ modalInfo.tipo_de_usuario }}</b></p>
                     <ButtonVue @click="onAccepted" :button="{

@@ -21,11 +21,16 @@
                 <h3>Permissões:</h3>
             </div>
            <div class="col-12" v-for="permission of permissions">
-                <h5 class="text-primary">{{ permission.nome }}</h5>
-                <div class="form-check form-switch py-2" v-for="action of permission.actions">
-                    <input v-model="action.checked" class="form-check-input" type="checkbox" role="switch" id="ativoCheckSwitch">
-                    <label class="form-check-label" for="ativoCheckSwitch">{{ action.nome }}</label>
-                    <p><small><i>{{ action.descricao }}</i></small></p>
+                <h5 class="text-primary">{{ permission.nome }} 
+                    <input v-if="permission.action_list" v-model="permission.action_list.checked" class="form-check-input" type="checkbox" role="switch" ></h5>
+                <div v-if="isActiveList(permission)">
+                    <div class="form-check form-switch py-2" v-for="action of permission.actions">
+                        <div v-if="!action.list">
+                            <input v-model="action.checked" class="form-check-input" type="checkbox" role="switch" id="ativoCheckSwitch">
+                            <label class="form-check-label" for="ativoCheckSwitch">{{ action.nome }}</label>
+                            <p><small><i>{{ action.descricao }}</i></small></p>
+                        </div>
+                    </div>
                 </div>
            </div>
            
@@ -51,6 +56,8 @@ import InputVue from '@/components/InputVue.vue';
 import ButtonVue from '@/components/ButtonVue.vue';
 import AlertVue from '@/components/AlertVue.vue';
 
+type permission = { nome:string, action_list?:{nome:string, descricao:string, checked:boolean, id:number, list:boolean}, actions:Array<{nome:string, descricao:string, checked:boolean, id:number, list:boolean}> }
+
 export default defineComponent({    
 
     created() {
@@ -68,6 +75,23 @@ export default defineComponent({
 
     methods: {
 
+        listarPermissoes(permission:permission){
+            for(const action of permission.actions){
+                if(action.list){
+                    action.checked = !action.checked
+                }
+            }
+        },
+
+        isActiveList(permission:permission):boolean{
+            for(const action of permission.actions){
+                if(action.list && action.checked){
+                    return true
+                }
+            }
+            return false
+        },
+
         async getPermissions(){
             const req = await request({
                 method:'get',
@@ -75,7 +99,18 @@ export default defineComponent({
             })
 
             if(req.code == 200){
+
                 this.permissions = req.body
+                console.log(this.permissions);
+                
+                for (let i = 0; i < this.permissions.length; i++) {
+                    for(const action of this.permissions[i].actions){
+                        if(action.list){
+                            this.permissions[i].action_list = action  
+                        }
+                    }
+                }
+                
             }
         },
 
@@ -95,10 +130,13 @@ export default defineComponent({
             if(this.userType && this.userType == type_user.USER_CLIENT){
                 let stats = false
                 for(const per of this.permissions){
-                    for(const ac of per.actions){
-                        if(ac.checked){
-                            stats = true 
-                            actions.push(ac.id)
+                    if(per.action_list && per.action_list.checked){
+                        actions.push(per.action_list.id)
+                        for(const ac of per.actions){
+                            if(!ac.list && ac.checked){
+                                stats = true 
+                                actions.push(ac.id)
+                            }
                         }
                     }
                 }
@@ -185,7 +223,7 @@ export default defineComponent({
                 required:true,
                 validate:true
             },
-            permissions:[] as Array<{nome:string, actions:Array<{nome:string, descricao:string, checked:boolean, id:number}>}>
+            permissions:[] as Array<permission>
         }
     },
 })

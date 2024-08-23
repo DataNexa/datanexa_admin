@@ -45,7 +45,6 @@ class Session {
     }
 
     static expireSessions(){
-        console.log("expirou sessao");
         expireSession()
         Session.logged = false
         Session.session = undefined

@@ -35,7 +35,7 @@ export default defineComponent({
         show() {
             setTimeout(() => {
                 this.alert.show = false
-            }, 10000);
+            }, 4000);
         }
     },
     watch:{

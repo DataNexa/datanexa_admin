@@ -70,10 +70,9 @@ export default defineComponent({
 
     methods: {
         async genError(){
-            await request({
-                method:'get',
-                route:'401'
-            })
+            Session.expireSessions()
+            window.location.reload();
+            toLogin()
         },
 
         async sair(){
@@ -85,6 +84,7 @@ export default defineComponent({
             if(req.code == 200){
                 Session.deleteToken()
                 Session.expireSessions()
+                window.location.reload()
                 toLogin()
             }
         }

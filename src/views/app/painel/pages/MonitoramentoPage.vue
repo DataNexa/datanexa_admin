@@ -90,7 +90,7 @@
                             <div class="row">
                                 
                                 <div class="col-6 py-2">
-                                    <router-link to="/monitoramento/editarFila">
+                                    <router-link v-if="canEditTasks" to="/monitoramento/editarFila">
                                         <button class="btn btn-sm btn-outline-primary d-block mr-auto">editar fila</button>
                                     </router-link>
                                 </div>
@@ -150,6 +150,8 @@ export default defineComponent({
     data(){
         return {
             code:App.havePagePermission("monitoramento") ? 200 : 401,
+            canAdd:App.userHasPermission('monitoramento@create'),
+            canEditTasks:App.userHasPermission('monitoramento@update'),
             loading:true,
             showTasks:false,
             carregandoTasks:true,

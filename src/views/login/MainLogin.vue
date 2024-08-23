@@ -78,6 +78,11 @@ export default defineComponent({
             if(accRepo.status && accRepo.body){
                 const acc = new Account(accRepo.body.nome, accRepo.body.email)
                 App.setAccount(acc)
+            } else {
+                Session.deleteToken()
+                this.component = "AuthMain"
+                this.loading = false
+                return 
             }
 
             const sess = getSession()

@@ -11,7 +11,7 @@
                 <a href="#">
                     <!-- <Icon icon="IconLogs" :scale="0.7" fill="blue"/>-->
                 </a>
-                <router-link :to="`/monitoramento/editar/${id}`" v-if="!loading">
+                <router-link :to="`/monitoramento/editar/${id}`" v-if="!loading && canEdit">
                     <button class="btn btn-outline-primary mx-2">Editar Monitoramento</button>
                 </router-link>
             </div>
@@ -142,6 +142,7 @@ import ChartWidget from '@/views/app/painel/widgets/_includes/ChartWidget.vue'
 import SelectVue from '@/components/inputs/SelectVue.vue';
 import Data from '@/model/libs/Data';
 import PublishWidget from '@/views/app/painel/widgets/monitoramento/PublishWidget.vue';
+import { App } from '@/model/Entidades/App';
 
 interface publicacao_stats {
     local:string,
@@ -315,6 +316,7 @@ export default defineComponent({
             loadingPub:true,
             totalPublicacoes:0,
             monitoramento:{} as monitoramento_i,
+            canEdit:App.userHasPermission('monitoramento@update'),
             atualSlug:'tudo',
             filtro:{
                 select:{

@@ -268,8 +268,6 @@ export default defineComponent({
             })
 
             if(response.code == 200){
-                console.log(stat);
-                
                 this.monitoramentos[key].repetir = stat ? 1 : 0
             }
 

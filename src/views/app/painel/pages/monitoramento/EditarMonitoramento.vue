@@ -95,7 +95,7 @@ export default defineComponent({
 
             const resp = await request({
                 method:'post',
-                route:'monitoramento/unique'
+                route:'monitoramento/read'
             }, {
                 id:this.id
             })

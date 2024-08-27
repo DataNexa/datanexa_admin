@@ -70,6 +70,14 @@
                                     <div :style="`width: ${localPercent.youtube}%; height:100%;`" class="bg-primary"></div>
                                 </div>
                             </div>
+
+                            <div class="container">
+                                <hr>
+                                <p>Filtrar por Data</p>
+                                <input @change="handleDateChange" class="form-control" v-model="dataIni" type="date" placeholder="data inicio">
+                                <input @change="handleDateChange" class="form-control" v-model="dataFim" type="date" placeholder="data inicio">
+                               </div>
+
                         </div>
                         <div class="col-12 col-md-6 col-lg-4">
                             <ChartWidget
@@ -128,6 +136,7 @@
 
 <script lang="ts">
 
+import InputVue from '@/components/InputVue.vue';
 import { defineComponent } from 'vue'
 import Page from '@/components/Page.vue';
 import { request } from '@/model/libs/Request';
@@ -181,24 +190,45 @@ interface publicacoes_i {
 export default defineComponent({
 
     async created() {
-        await this.getData()
-        await this.getPublishs()
-        this.filterPub()
+
+        const today = new Date();
+
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+
+        const thirtyDaysAgo = new Date(today);
+        thirtyDaysAgo.setDate(today.getDate() - 30 * 6 );
+
+        const formatToISODate = (date: Date): string => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+        };
+
+        this.dataIni = formatToISODate(thirtyDaysAgo);
+        this.dataFim = formatToISODate(tomorrow);
+
+        this.loadData();
 
     },
 
     methods: {
 
         async getPublishs(){
+            
+            this.loadingPub = true
 
             const resp = await request({
                 method:'post',
-                route:'publicacoes/list'
+                route:'publicacoes/filter_by_date'
             }, {
-                monitoramento_id:this.id
+                monitoramento_id:this.id,
+                dataini:this.dataIni,
+                datafim:this.dataFim
             })
 
-            
             if(resp.code == 200){
                 this.publicacoes = resp.body as publicacoes_i[]
                 this.loadingPub  = false
@@ -228,13 +258,26 @@ export default defineComponent({
 
         },
         
+        async loadData(){
+            this.totalPublicacoes = 0
+            await this.getData()
+            await this.getPublishs()
+            this.filterPub()
+        },
+
+        handleDateChange() {
+            this.loadData();
+        },
+        
         async getData(){
 
             const resp = await request({
                 method:'post',
                 route:'monitoramento/unique'
             }, {
-                id:this.id
+                id:this.id,
+                dataini:this.dataIni,
+                datafim:this.dataFim
             })
 
             this.code = resp.code
@@ -318,6 +361,8 @@ export default defineComponent({
             monitoramento:{} as monitoramento_i,
             canEdit:App.userHasPermission('monitoramento@update'),
             atualSlug:'tudo',
+            dataIni:'',
+            dataFim:'',
             filtro:{
                 select:{
                     label:'Mostrar:',
@@ -368,7 +413,7 @@ export default defineComponent({
 
     },
 
-    components:{ Page, Widget, Icon, IconInstagram, IconFacebook, IconTwitter, IconYoutube, IconWeb, ChartWidget, SelectVue, PublishWidget }
+    components:{ InputVue, Page, Widget, Icon, IconInstagram, IconFacebook, IconTwitter, IconYoutube, IconWeb, ChartWidget, SelectVue, PublishWidget }
 
 })
 

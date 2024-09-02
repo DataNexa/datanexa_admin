@@ -14,7 +14,7 @@
                 <router-link :to="`/monitoramento/editar/${id}`" v-if="!loading && canEdit">
                     <button class="btn btn-outline-primary mx-2">Editar Monitoramento</button>
                 </router-link>
-                <button @click="gerarRelatorio" class="btn btn-outline-primary mx-2">Gerar Relatório de Análise de Sentimento</button>
+                <button v-if="!loading && canCreate" @click="gerarRelatorio" class="btn btn-outline-primary mx-2">Gerar Relatório de Análise de Sentimento</button>
                 
             </div>
             
@@ -378,6 +378,7 @@ export default defineComponent({
             totalPublicacoes:0,
             monitoramento:{} as monitoramento_i,
             canEdit:App.userHasPermission('monitoramento@update'),
+            canCreate:App.userHasPermission('monitoramento@create'),
             atualSlug:'tudo',
             dataIni:'',
             dataFim:'',

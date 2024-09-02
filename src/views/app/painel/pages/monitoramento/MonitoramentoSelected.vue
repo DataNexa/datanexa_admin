@@ -76,8 +76,8 @@
                             <div class="container">
                                 <hr>
                                 <p>Filtrar por Data</p>
-                                <input @change="handleDateChange" class="form-control" v-model="dataIni" type="date" placeholder="data inicio">
-                                <input @change="handleDateChange" class="form-control" v-model="dataFim" type="date" placeholder="data inicio">
+                                <input @blur="handleDateChange" class="form-control" v-model="dataIni" type="date" placeholder="data inicio">
+                                <input @blur="handleDateChange" class="form-control" v-model="dataFim" type="date" placeholder="data inicio">
                                </div>
 
                         </div>

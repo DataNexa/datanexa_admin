@@ -14,6 +14,8 @@
                 <router-link :to="`/monitoramento/editar/${id}`" v-if="!loading && canEdit">
                     <button class="btn btn-outline-primary mx-2">Editar Monitoramento</button>
                 </router-link>
+                <button @click="gerarRelatorio" class="btn btn-outline-primary mx-2">Gerar Relatório de Análise de Sentimento</button>
+                
             </div>
             
         </template>
@@ -139,7 +141,7 @@
 import InputVue from '@/components/InputVue.vue';
 import { defineComponent } from 'vue'
 import Page from '@/components/Page.vue';
-import { request } from '@/model/libs/Request';
+import { request, download } from '@/model/libs/Request';
 import Widget from '@/components/Widget.vue';
 import Icon from '@/components/Icon.vue';
 import IconInstagram from '@/components/icons/IconInstagram.vue';
@@ -218,6 +220,19 @@ export default defineComponent({
     },
 
     methods: {
+
+        async gerarRelatorio(){
+
+            await download({
+                method:'post',
+                route:'monitoramento/gerarRelatorio'
+            }, {
+                dataini: this.dataIni,
+                datafim: this.dataFim,
+                id: this.id
+            })
+
+        },
 
         async getPublishs(){
             
